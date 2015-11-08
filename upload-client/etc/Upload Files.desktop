@@ -1,0 +1,19 @@
+[Desktop Entry]
+Comment[ru]=
+Comment=
+Exec=upload-qt-client %u
+GenericName[ru]=
+GenericName=
+Icon=upload-media
+MimeType=
+Name[ru]=Upload Files
+Name=Upload Files
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

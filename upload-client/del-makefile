@@ -1,0 +1,6 @@
+#!/bin/sh
+find . -name "Makefile*" -exec rm -rf {} \;
+rm -rf object_script*
+rm -rf release
+rm -rf debug
+rm -rf tmp/*

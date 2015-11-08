@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="upload">upload.ico</file>
+        <file>db_commit.icns</file>
+        <file>db_commit.ico</file>
+        <file>db_commit.png</file>
+        <file alias="clipboard-list">icons/clipboard-list.png</file>
+        <file alias="clipboard-p-doc">icons/clipboard-paste-document-text.png</file>
+        <file alias="clipboard-p">icons/clipboard-paste.png</file>
+        <file alias="tick">icons/tick.png</file>
+        <file alias="folder-open-doc">icons/folder-open-document.png</file>
+        <file alias="notebook-share">icons/notebook-share.png</file>
+        <file alias="hammer-screwdriver">icons/hammer-screwdriver.png</file>
+        <file alias="cross-button">icons/cross-button.png</file>
+        <file alias="arrow-315">icons/arrow-315.png</file>
+        <file alias="application-home">icons/application-home.png</file>
+        <file alias="doc-attr-l">icons/document-attribute-l.png</file>
+        <file alias="doc-attr-f">icons/document-attribute-f.png</file>
+        <file alias="application-browser">icons/application-browser.png</file>
+        <file alias="up">icons/up.png</file>
+        <file alias="cross">icons/cross.png</file>
+    </qresource>
+</RCC>

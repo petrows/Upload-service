@@ -1,0 +1,9 @@
+#!/bin/bash
+
+QT_DIR="/Users/asshole/QtSDK/Desktop/Qt/472/gcc/bin"
+
+./del-makefile
+
+$QT_DIR/qmake
+make clean
+make

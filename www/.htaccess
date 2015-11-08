@@ -1,0 +1,17 @@
+Options -Indexes +FollowSymLinks +ExecCGI
+AddDefaultCharset UTF-8
+
+AddHandler cgi-script .cgi
+
+Allow from all
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	
+	RewriteRule ^download/force/(.*)/(.*)/(.*)/(.*)$ download.cgi?code=$1&num=$2&dcode=$3&name=$4&force=1 [L]
+	RewriteRule ^download/(.*)/(.*)/(.*)/(.*)$ download.cgi?code=$1&num=$2&dcode=$3&name=$4 [L]
+	
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^(.*)$ index.php?url=$1
+</IfModule>

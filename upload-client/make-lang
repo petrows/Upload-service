@@ -1,0 +1,3 @@
+#!/bin/bash
+
+lupdate-qt4 src/* -no-obsolete -ts lang/ru.ts
