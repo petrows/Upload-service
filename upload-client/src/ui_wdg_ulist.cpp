@@ -344,7 +344,8 @@ QVariant ui_wdg_ulist_mdl::data(const QModelIndex &index, int role) const
 }
 void ui_wdg_ulist_mdl::upd()
 {
-	this->reset();
+	beginResetModel();
+	endResetModel();
 	// qDebug() << "Reset model! (ulist)";
 }
 Qt::ItemFlags ui_wdg_ulist_mdl::flags(const QModelIndex &index) const

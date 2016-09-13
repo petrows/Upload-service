@@ -1,7 +1,7 @@
 #ifndef UI_MAIN_H
 #define UI_MAIN_H
 
-#include <QMainWindow>
+#include <QtWidgets/QMainWindow>
 #include "global.h"
 
 #include "u_core.h"

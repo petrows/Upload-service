@@ -1,9 +1,10 @@
 #include "u_api.h"
 
 #include <QNetworkProxy>
+#include <QUrlQuery>
 
 u_api::u_api(QObject *parent) :
-    QObject(parent)
+	QObject(parent)
 {
 	this->req_url = QUrl("http://"UPLOAD_DOMAIN"/api/?");
 	this->login   = core->login;
@@ -39,10 +40,10 @@ QNetworkRequest u_api::std_request()
 QString u_api::std_cookies()
 {
 	QStringList cc;
-	
+
 	cc.append("v="  + core->version_s);
 	cc.append("os=" + core->os);
-	
+
 	// Get valid SID?
 	if (!this->sid.isEmpty())
 	{
@@ -57,7 +58,9 @@ QString u_api::std_cookies()
 
 void u_api::set_action(QString action)
 {
-	this->req_url.addQueryItem("a",action.toLower());
+	QUrlQuery urlQuery(req_url);
+	urlQuery.addQueryItem("a",action.toLower());
+	req_url.setQuery(urlQuery);
 }
 
 bool u_api::do_action()
@@ -78,7 +81,7 @@ bool u_api::do_action()
 		rep = this->mng.get(this->req);
 	else
 		rep = this->mng.post(this->req,QByteArray(this->post_data.toStdString().c_str()));
-	
+
 	while (!rep->isFinished())
 	{
 		u_core_sleep::msleep(50);
@@ -89,7 +92,7 @@ bool u_api::do_action()
 
 bool u_api::parse_answer(QString data)
 {
-	// qDebug() << data;
+	qDebug() << data;
 	// Okay, check The Res
 	if (!this->ans_dom.setContent(data) || (this->ans_dom.documentElement().nodeName()!="api"))
 	{

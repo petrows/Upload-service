@@ -1,7 +1,7 @@
 #ifndef U_CORE_H
 #define U_CORE_H
 
-#include <QSystemTrayIcon>
+#include <QtWidgets/QSystemTrayIcon>
 #include <QNetworkProxy>
 
 #include "global.h"
@@ -79,7 +79,7 @@ public:
 	void start_new_sid ();
 
 	bool sid_ready ();
-	
+
 	bool has_uploading();
 
 	// Common functions

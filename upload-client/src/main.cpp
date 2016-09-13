@@ -1,12 +1,11 @@
 #define IN_MAIN
 
-#include <QApplication>
+#include <QtSingleApplication>
+#include <QtWidgets/QApplication>
 #include <QTranslator>
 #include "global.h"
 #include "u_core.h"
 #include "u_common.h"
-
-#include "../3dpatry/qtsingleapplication/src/QtSingleApplication"
 
 int main(int argc, char *argv[])
 {

@@ -2,6 +2,7 @@
 
 #include <QFileInfo>
 #include <QClipboard>
+#include <QUrlQuery>
 
 #include "u_api.h"
 
@@ -37,10 +38,17 @@ bool u_upload_file::start_upload(QString path)
 	u_api api;
 
 	QNetworkRequest req = api.std_request();
-	QUrl            req_url("http://"UPLOAD_DOMAIN"/upload.cgi?api=1&s="+core->sid);
-	req_url.addQueryItem("upid",QString::number(this->parent->up_id));
-	req_url.addQueryItem("id",QString::number(this->parent->files.count()));
-	req_url.addQueryItem("qqfile",file_inf.fileName());
+	QUrl            req_url("http://"UPLOAD_DOMAIN"/upload.cgi");
+
+	QUrlQuery urlQuery;
+
+	urlQuery.addQueryItem("api", "1");
+	urlQuery.addQueryItem("s", core->sid);
+	urlQuery.addQueryItem("upid",QString::number(this->parent->up_id));
+	urlQuery.addQueryItem("id",QString::number(this->parent->files.count()));
+	urlQuery.addQueryItem("qqfile",file_inf.fileName());
+
+	req_url.setQuery(urlQuery);
 
 	this->file_size = file_inf.size();
 	this->file_name = file_inf.fileName();
@@ -50,6 +58,7 @@ bool u_upload_file::start_upload(QString path)
 	QString ss_cookie = api.std_cookies();
 	ss_cookie += "; auth="+(core->lk);
 	req.setRawHeader("Cookie", ss_cookie.toStdString().c_str());
+	req.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data");
 
 	this->rep = this->mng.post(req, &this->file_h);
 	connect(this->rep,SIGNAL(uploadProgress(qint64,qint64)),SLOT(_progress(qint64,qint64)));
@@ -88,6 +97,7 @@ void u_upload_file::_progress(qint64 done, qint64 total)
 	this->mtx_info.unlock();
 	emit this->progress(done, total);
 }
+
 void u_upload_file::_req_done()
 {
 	if (this->parent->remove_after_upload)
@@ -96,14 +106,29 @@ void u_upload_file::_req_done()
 		QFile::remove(this->file_local);
 	}
 
+	// Redirect?
+	QUrl possibleRedirectUrl = rep->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+	if (!possibleRedirectUrl.isEmpty())
+	{
+		possibleRedirectUrl = this->rep->request().url().resolved(possibleRedirectUrl);
+		qDebug() << "Redirect: " << possibleRedirectUrl;
+		this->rep = this->mng.get(QNetworkRequest(possibleRedirectUrl));
+		connect(this->rep,SIGNAL(finished()),SLOT(_req_done()));
+		return;
+	}
+
 	// Read ans
+	QByteArray data = rep->readAll();
+
 	u_api api;
-	if (!api.parse_answer(rep->readAll()) || api.ans_dom.documentElement().firstChildElement("upload").attributes().namedItem("status").nodeValue()!="ok")
+	if (!api.parse_answer(data) || api.ans_dom.documentElement().firstChildElement("upload").attributes().namedItem("status").nodeValue()!="ok")
 	{
 		// Error!
 		this->state      = Error;
 		this->last_error = api.last_error;
 		emit this->status_changed();
+		this->parent->recount();
+		core->reload_ui();
 		return;
 	}
 
@@ -147,7 +172,7 @@ void u_upload_file::copy_file_link()
 // ======================================================================
 
 u_upload::u_upload(QObject *parent) :
-    QObject(parent)
+	QObject(parent)
 {
 	this->state        = Uploaded;
 	this->id           = 0;
@@ -198,7 +223,10 @@ bool u_upload::deleteMe(bool force)
 	this->api->std_request();
 
 	this->api->set_action("delete");
-	this->api->req_url.addQueryItem("id",QString::number(this->id));
+	QUrlQuery urlQuery(api->req_url);
+	urlQuery.addQueryItem("id",QString::number(this->id));
+	api->req_url.setQuery(urlQuery);
+
 	bool res = this->api->do_action();
 
 	if (!res && !force)
@@ -221,10 +249,13 @@ bool u_upload::setInfo(QString comment, int ttl, bool prolong)
 	this->api->std_request();
 
 	this->api->set_action("update");
-	this->api->req_url.addQueryItem("id",QString::number(this->id));
-	this->api->req_url.addQueryItem("comment",comment);
-	this->api->req_url.addQueryItem("ttl",QString::number(ttl));
-	this->api->req_url.addQueryItem("prol",prolong?"Y":"N");
+	QUrlQuery urlQuery(api->req_url);
+	urlQuery.addQueryItem("id",QString::number(this->id));
+	urlQuery.addQueryItem("comment",comment);
+	urlQuery.addQueryItem("ttl",QString::number(ttl));
+	urlQuery.addQueryItem("prol",prolong?"Y":"N");
+	api->req_url.setQuery(urlQuery);
+
 	bool res = this->api->do_action();
 	if (res)
 	{

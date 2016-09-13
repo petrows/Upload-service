@@ -1,7 +1,7 @@
 #include "u_common.h"
 
 #include <QDebug>
-
+#include <QUrlQuery>
 
 #ifdef USE_ZIP
 
@@ -143,3 +143,5 @@ quint32 perms_hex2oct (quint32 phex)
 	sprintf(buf_in,"%x",phex);
 	return QString(buf_in).toInt(NULL,8);
 }
+
+

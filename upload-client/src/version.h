@@ -10,7 +10,7 @@
 #define VER_COMPANYNAME_STR         "Kedr.inc"
 #define VER_FILEDESCRIPTION_STR     "Uploader: u.petro.ws"
 #define VER_INTERNALNAME_STR        "upload-client"
-#define VER_LEGALCOPYRIGHT_STR      "Copyright © 2011 Kedr.inc"
+#define VER_LEGALCOPYRIGHT_STR      "Copyright Â© 2011 Kedr.inc"
 #define VER_LEGALTRADEMARKS1_STR    "u.petro.ws"
 #define VER_LEGALTRADEMARKS2_STR    "All Rights Reserved"
 #define VER_ORIGINALFILENAME_STR    "Upload.exe"

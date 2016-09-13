@@ -1,7 +1,11 @@
-
+include(../common.pri)
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 QT *= network
+
+contains(QT_VERSION, ^5.*) {
+    QT *= widgets
+}
 
 qtsingleapplication-uselib:!qtsingleapplication-buildlib {
     LIBS += -L$$QTSINGLEAPPLICATION_LIBDIR -l$$QTSINGLEAPPLICATION_LIBNAME

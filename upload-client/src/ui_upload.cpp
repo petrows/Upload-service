@@ -3,13 +3,14 @@
 
 #include "u_api.h"
 
+#include <QUrlQuery>
 #include <math.h>
 
 ui_upload::ui_upload(QWidget *parent, u_upload * upl) :
 	QDialog(parent),upl(upl),
-    ui(new Ui::ui_upload)
+	ui(new Ui::ui_upload)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
 
 	this->setWindowIcon(QIcon(":/icons/upload"));
 
@@ -32,7 +33,7 @@ ui_upload::ui_upload(QWidget *parent, u_upload * upl) :
 
 ui_upload::~ui_upload()
 {
-    delete ui;
+	delete ui;
 	this->upl->form = NULL; // We are die :(
 }
 
@@ -103,7 +104,9 @@ void ui_upload::on_btnSave_clicked()
 	this->ui->grUploaded->setDisabled(true);
 	u_api api;
 	api.set_action("update");
-	api.req_url.addQueryItem("id",QString::number(this->upl->id));
+	QUrlQuery urlQuery(api.req_url);
+	urlQuery.addQueryItem("id",QString::number(this->upl->id));
+	api.req_url.setQuery(urlQuery);
 
 	if (this->upl->setInfo(ui->edtDescr->text(),core->ttls.at(ui->boxTtl->currentIndex()).first,ui->chRenew->checkState()==Qt::Checked))
 	{

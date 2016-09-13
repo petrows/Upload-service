@@ -32,7 +32,7 @@ u_core::u_core(QObject *parent) :
 	this->last_complete_was = true;
 
 	this->upd_has = false;
-	
+
 #ifdef Q_OS_LINUX
 	this->os = "linux";
 #endif
@@ -79,7 +79,7 @@ void u_core::run ()
 	}
 	// Okay, now we must do Global Init...
 	this->start_new_sid();
-	
+
 	// Updating?
 	if (QApplication::arguments().contains("--update-mode"))
 	{
@@ -239,7 +239,7 @@ void u_core::reload_config()
 
 	this->opt_upd_ask_last   = this->cfg.value("update/last_ask",0).toInt();
 	this->opt_upd_ask_period = this->cfg.value("update/ask_period",86400).toInt();
-	this->opt_zip_files      = this->cfg.value("zip_files_mode",QChar('S')).toChar().toAscii();
+	this->opt_zip_files      = this->cfg.value("zip_files_mode",QChar('S')).toChar().toLatin1();
 	this->tmp_folder         = this->cfg.value("tmp_folder",QDir::tempPath()).toString();
 
 	this->opt_proxy_enable   = this->cfg.value("proxy/enable",false).toBool();

@@ -2,7 +2,7 @@
 #define GLOBAL_H
 
 #include <QObject>
-#include <QApplication>
+#include <QtWidgets/QApplication>
 #include <QSettings>
 #include <QDir>
 #include <QUrl>
@@ -11,10 +11,10 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QTime>
-#include <QFileDialog>
+#include <QtWidgets/QFileDialog>
 #include <QThread>
-#include <QMessageBox>
-#include <QProgressBar>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressBar>
 #include <QDomDocument>
 #include <QIcon>
 #include <QDebug>

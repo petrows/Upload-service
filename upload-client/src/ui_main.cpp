@@ -4,6 +4,7 @@
 #include "ui_about.h"
 
 #include <QCloseEvent>
+#include <QMimeData>
 
 ui_main::ui_main(QWidget *parent) :
 	QMainWindow(parent),

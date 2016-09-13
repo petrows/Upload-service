@@ -1,12 +1,12 @@
 #ifndef ui_wdg_flist_H
 #define ui_wdg_flist_H
 
-#include <QTreeView>
-#include <QItemDelegate>
-#include <QLabel>
-#include <QPushButton>
-#include <QProgressBar>
-#include <QHBoxLayout>
+#include <QtWidgets/QTreeView>
+#include <QtWidgets/QItemDelegate>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QProgressBar>
+#include <QtWidgets/QHBoxLayout>
 #include <math.h>
 
 #include "global.h"
@@ -18,7 +18,7 @@ class ui_wdg_flist;
 
 class ui_wdg_flist : public QTreeView
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
 	explicit ui_wdg_flist(QWidget *parent, u_upload * upl);
 	void resizeEvent(QResizeEvent *event);
