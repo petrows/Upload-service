@@ -4,6 +4,9 @@
 #include <cstdlib>
 #include <unistd.h>
 
+#include "common.h"
+#include "webupload.h"
+
 using namespace  std;
 
 std::atomic<bool> CGI::enableRun;
@@ -91,35 +94,36 @@ void CGI::threadFunc(int id)
 
 		if (-1 == ret) break; // We cant do this work
 
-		cout << "Accepted [" << id << "]" << endl;
+		cout << "Accepted [" << id << "]: " << FCGX_GetParam("REMOTE_ADDR", request.envp) << " " << FCGX_GetParam("REQUEST_URI", request.envp) << endl;
 
-		//получить значение переменной
-		char *server_name = FCGX_GetParam("SERVER_NAME", request.envp);
+		// Detect - what worker we should run?
+		string scriptName = FCGX_GetParam("SCRIPT_NAME", request.envp);
+		scriptName = strTrim(scriptName, "/");
 
-		//вывести все HTTP-заголовки (каждый заголовок с новой строки)
-		FCGX_PutS("Content-type: text/html\r\n", request.out);
-		//между заголовками и телом ответа нужно вывести пустую строку
-		FCGX_PutS("\r\n", request.out);
-		//вывести тело ответа (например - html-код веб-страницы)
-		FCGX_PutS("<html>\r\n", request.out);
-		FCGX_PutS("<head>\r\n", request.out);
-		FCGX_PutS("<title>FastCGI Hello! (multi-threaded C, fcgiapp library)</title>\r\n", request.out);
-		FCGX_PutS("</head>\r\n", request.out);
-		FCGX_PutS("<body>\r\n", request.out);
-		FCGX_PutS("<h1>FastCGI Hello! (multi-threaded C, fcgiapp library)</h1>\r\n", request.out);
-		FCGX_PutS("<p>Request accepted from host <i>", request.out);
-		FCGX_PutS(server_name ? server_name : "?", request.out);
-		FCGX_PutS("</i></p>\r\n", request.out);
+		cout << "z1: " << scriptName << endl;
 
-		FCGX_PutS("<p>Im a thread <b>", request.out);
-		FCGX_PutS(std::to_string(id).c_str(), request.out);
-		FCGX_PutS("</b></p>", request.out);
+		vector<string> scriptNamePath = strExplode(scriptName, "/");
 
-		FCGX_PutS("</body>\r\n", request.out);
-		FCGX_PutS("</html>\r\n", request.out);
+		// Check - we are api? And select proper worker
+		bool requestPrecessed = false;
+		if (scriptNamePath.size() > 1 && string("api") == scriptNamePath[0])
+		{
+			// Select worker
+			if (string("u") == scriptNamePath[1]) {
+				requestPrecessed = true;
+				// Upload worker
+				WebUpload upload;
+				upload.init(&request);
+				upload.handleRequest();
+			}
+		}
 
-		//"заснуть" - имитация многопоточной среды
-		sleep(2);
+		if (!requestPrecessed) {
+			cout << "Invalid request" << endl;
+			FCGX_PutS("Status: 400\r\n", request.out);
+			FCGX_PutS("\r\n", request.out);
+			FCGX_PutS("Invalid request", request.out);
+		}
 
 		FCGX_Finish_r(&request);
 	}
