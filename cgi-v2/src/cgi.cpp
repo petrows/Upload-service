@@ -1,31 +1,29 @@
 #include "cgi.h"
-#include <iostream>
 #include <csignal>
 #include <cstdlib>
+#include <iostream>
 #include <unistd.h>
 
 #include "common.h"
 #include "webupload.h"
 
-using namespace  std;
+using namespace std;
 
 std::atomic<bool> CGI::enableRun;
 
-CGI::CGI(int argc, char **argv)
-{
+CGI::CGI(int argc, char **argv) {
 	socketPath = "/tmp/petro-upload-sock";
 	threadCount = 5;
 
 	enableRun = true;
 }
 
-int CGI::run()
-{
+int CGI::run() {
 	int ret;
 
-	//std::signal(SIGINT, sighandler);
-	//std::signal(SIGABRT, sighandler);
-	//std::signal(SIGKILL, sighandler);
+	// std::signal(SIGINT, sighandler);
+	// std::signal(SIGABRT, sighandler);
+	// std::signal(SIGKILL, sighandler);
 
 	ret = FCGX_Init();
 	if (0 != ret) {
@@ -34,7 +32,7 @@ int CGI::run()
 	}
 
 	socketHandle = FCGX_OpenSocket(socketPath.c_str(), 64);
-	if(socketHandle < 0) {
+	if (socketHandle < 0) {
 		cerr << "Cant open socket " << socketPath << ", error " << errno << endl;
 		return 2;
 	}
@@ -42,14 +40,12 @@ int CGI::run()
 
 	cout << "Starting threads: " << threadCount << endl;
 
-	for(unsigned int x=0; x<threadCount; x++)
-	{
+	for (unsigned int x = 0; x < threadCount; x++) {
 		thread *t = new thread(&CGI::threadFunc, this, x);
 		threadList.push_back(t);
 	}
 
-	while (enableRun)
-	{
+	while (enableRun) {
 		// Wait for the World end
 		usleep(100 * 1000);
 	}
@@ -61,8 +57,7 @@ int CGI::run()
 
 	cout << "Stopping threads" << endl;
 
-	for(thread* t : threadList)
-	{
+	for (thread *t : threadList) {
 		t->join();
 		delete t;
 	}
@@ -71,28 +66,26 @@ int CGI::run()
 	return 0;
 }
 
-void CGI::sighandler(int signal)
-{
+void CGI::sighandler(int signal) {
 	cerr << "Signal " << signal << " catched" << endl;
 
 	// Stop threads
 	enableRun = false;
 }
 
-void CGI::threadFunc(int id)
-{
+void CGI::threadFunc(int id) {
 	int ret;
 	FCGX_Request request;
 	FCGX_InitRequest(&request, socketHandle, FCGI_FAIL_ACCEPT_ON_INTR);
 
-	while (enableRun)
-	{
+	while (enableRun) {
 		// Accept new request
 		threadMutex.lock();
 		ret = FCGX_Accept_r(&request);
 		threadMutex.unlock();
 
-		if (-1 == ret) break; // We cant do this work
+		if (-1 == ret)
+			break; // We cant do this work
 
 		cout << "Accepted [" << id << "]: " << FCGX_GetParam("REMOTE_ADDR", request.envp) << " " << FCGX_GetParam("REQUEST_URI", request.envp) << endl;
 
@@ -106,8 +99,7 @@ void CGI::threadFunc(int id)
 
 		// Check - we are api? And select proper worker
 		bool requestPrecessed = false;
-		if (scriptNamePath.size() > 1 && string("api") == scriptNamePath[0])
-		{
+		if (scriptNamePath.size() > 1 && string("api") == scriptNamePath[0]) {
 			// Select worker
 			if (string("u") == scriptNamePath[1]) {
 				requestPrecessed = true;
