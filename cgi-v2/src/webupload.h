@@ -3,8 +3,7 @@
 
 #include "webworker.h"
 
-class WebUpload : public WebWorker
-{
+class WebUpload : public WebWorker {
 public:
 	WebUpload();
 

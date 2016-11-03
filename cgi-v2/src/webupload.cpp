@@ -3,13 +3,9 @@
 
 using namespace std;
 
-WebUpload::WebUpload()
-{
+WebUpload::WebUpload() {}
 
-}
-
-void WebUpload::handleRequest()
-{
+void WebUpload::handleRequest() {
 	cout << "Cookie: " << cookie["PHPSESSID"] << endl;
 	cout << "Get: " << get["api"] << endl;
 }
