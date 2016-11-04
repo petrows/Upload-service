@@ -11,12 +11,17 @@
 
 class CGI {
 public:
-	CGI(int argc, char **argv);
 
-	int run();
+	// Configs
+	static std::string cfgWorkDir;
+
+	CGI();
+
+	int run(int argc, char **argv);
 
 private:
 	static void sighandler(int signal);
+	void help();
 	void threadFunc(int id);
 
 	static std::atomic<bool> enableRun;

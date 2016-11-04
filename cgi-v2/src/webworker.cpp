@@ -1,9 +1,13 @@
 #include "webworker.h"
 #include "common.h"
 
+#include <sstream>
+
 using namespace std;
 
-WebWorker::WebWorker() {}
+WebWorker::WebWorker() {
+	httpReturnCode = 200;
+}
 
 bool WebWorker::init(FCGX_Request *requestIn) {
 	request = requestIn;
@@ -33,4 +37,12 @@ bool WebWorker::init(FCGX_Request *requestIn) {
 	}
 
 	return true;
+}
+
+void WebWorker::finishHeaders()
+{
+	replyHeaders << "Status: " << httpReturnCode << "\r\n";
+	replyHeaders << "\r\n";
+
+	FCGX_PutS(replyHeaders.str().c_str(), request->out);
 }

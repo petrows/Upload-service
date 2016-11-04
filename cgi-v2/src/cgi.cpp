@@ -2,6 +2,7 @@
 #include <csignal>
 #include <cstdlib>
 #include <iostream>
+#include <libgen.h>
 #include <unistd.h>
 
 #include "common.h"
@@ -10,20 +11,39 @@
 using namespace std;
 
 std::atomic<bool> CGI::enableRun;
+std::string CGI::cfgWorkDir;
 
-CGI::CGI(int argc, char **argv) {
+CGI::CGI() {}
+
+int CGI::run(int argc, char **argv) {
+	int ret;
+
 	socketPath = "/tmp/petro-upload-sock";
 	threadCount = 5;
 
+	cfgWorkDir = dirname(argv[0]);
 	enableRun = true;
-}
-
-int CGI::run() {
-	int ret;
 
 	// std::signal(SIGINT, sighandler);
 	// std::signal(SIGABRT, sighandler);
 	// std::signal(SIGKILL, sighandler);
+
+	// Params
+	int c;
+
+	while ((c = getopt(argc, argv, "hd:")) != -1) {
+		switch (c) {
+		case 'h':
+			// Print help
+			help();
+			return 0;
+		case 'd':
+			cfgWorkDir = optarg;
+			break;
+		default:
+			abort();
+		}
+	}
 
 	ret = FCGX_Init();
 	if (0 != ret) {
@@ -39,6 +59,7 @@ int CGI::run() {
 	cout << "Started listen " << socketPath << endl;
 
 	cout << "Starting threads: " << threadCount << endl;
+	cout << "Using upload root dir: " << cfgWorkDir << endl;
 
 	for (unsigned int x = 0; x < threadCount; x++) {
 		thread *t = new thread(&CGI::threadFunc, this, x);
@@ -71,6 +92,12 @@ void CGI::sighandler(int signal) {
 
 	// Stop threads
 	enableRun = false;
+}
+
+void CGI::help() {
+	cout << "Usage: " << endl;
+	cout << "-h       : help" << endl;
+	cout << "-d <dir> : upload root directory" << endl;
 }
 
 void CGI::threadFunc(int id) {
