@@ -58,8 +58,8 @@ class mod_f extends module_template
 		
 		$f_list = '';
 		for ($x = 0; $x < count($f_data); $x++) {
-			$f_link = URL . '/api/d/' . $u_data['code'] . '/' . $f_data[ $x ]['upn'] . '/' . $f_data[ $x ]['dh'] . '/' . htmlspecialchars($f_data[ $x ]['file_name']);
-			$f_flink = URL . '/api/f/' . $u_data['code'] . '/' . $f_data[ $x ]['upn'] . '/' . $f_data[ $x ]['dh'] . '/' . htmlspecialchars($f_data[ $x ]['file_name']);
+			$f_link = URL . '/c/d/' . $u_data['code'] . '/' . $f_data[ $x ]['upn'] . '/' . $f_data[ $x ]['dh'] . '/' . htmlspecialchars($f_data[ $x ]['file_name']);
+			$f_flink = URL . '/c/f/' . $u_data['code'] . '/' . $f_data[ $x ]['upn'] . '/' . $f_data[ $x ]['dh'] . '/' . htmlspecialchars($f_data[ $x ]['file_name']);
 			
 			$fd = $f_data[ $x ];
 			$fd['size'] = format_size($fd['file_size']);

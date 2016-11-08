@@ -85,7 +85,7 @@
 		$('#upload_area').show();
 		window.__uploader = new qq.FileUploader({
 			element: document.getElementById('file-uploader'),
-			action: '{{$_url}}/api/u/',
+			action: '{{$_url}}/c/u/',
 			params: {'s':'{{$sid}}'},
 			{{if cfg('ext_control')}}
 			allowedExtensions: [{{$ext_js}}],

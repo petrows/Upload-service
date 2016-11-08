@@ -83,7 +83,7 @@ void WebDownload::handleRequest() {
 		return printError(404, "File Not Found");
 	}
 
-	ERR << logHeader() << "Start download file " << uploadFileName << "(" << fileInfoSize << ")";
+	ERR << logHeader() << "Start download file " << uploadFileName << " (" << fileInfoSize << ")";
 	chrono::milliseconds timeStart = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch());
 
 	char *fileBuf = new char[BUFF_SIZE];
@@ -96,8 +96,16 @@ void WebDownload::handleRequest() {
 	delete[] fileBuf;
 
 	chrono::milliseconds timeStop = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch());
+	int64_t downloadTime = (timeStop.count() - timeStart.count());
 
-	DBG << logHeader() << "Downloading file done, time " << (timeStop.count() - timeStart.count()) << " ms";
+	double speed = 0;
+
+	if (downloadTime)
+	{
+		speed = (double)fileInfoSize / ((double)downloadTime / 1000.0);
+	}
+
+	DBG << logHeader() << "Downloading file done, time " << downloadTime << " ms, speed " << speed << " b/s";
 }
 
 void WebDownload::printError(int code, string msg) {

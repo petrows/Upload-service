@@ -133,7 +133,7 @@ void CGI::threadFunc(int id) {
 
 		// Check - we are api? And select proper worker
 		bool requestPrecessed = false;
-		if (scriptNamePath.size() > 1 && string("api") == scriptNamePath[0]) {
+		if (scriptNamePath.size() > 1 && string("c") == scriptNamePath[0]) {
 			// Select worker
 			if (string("u") == scriptNamePath[1]) {
 				requestPrecessed = true;

@@ -38,7 +38,7 @@ bool u_upload_file::start_upload(QString path)
 	u_api api;
 
 	QNetworkRequest req = api.std_request();
-	QUrl            req_url("http://"UPLOAD_DOMAIN"/upload.cgi");
+	QUrl            req_url("http://"UPLOAD_DOMAIN"/c/u/");
 
 	QUrlQuery urlQuery;
 
