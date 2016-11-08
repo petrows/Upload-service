@@ -17,8 +17,8 @@ macx {
 	LIBS += -lz
 }
 win32 {
-	LIBS += -L"3dpatry/zlib-win32/" -lzlib1 3dpatry/zlib-win32/zdll.lib
-	INCLUDEPATH += 3dpatry/zlib-win32/include/
+        LIBS += -L"$$PWD/3dpatry/zlib-win32/" -lzlib1 "$$PWD/3dpatry/zlib-win32/zdll.lib"
+        INCLUDEPATH += 3dpatry/zlib-win32/include/
 }
 include (3dpatry/quazip/quazip.pri)
 
