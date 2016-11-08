@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "log.h"
 
 std::string strMd5(std::string &in);
 std::vector<std::string> strExplode(std::string &s, const char *delm, size_t max = 0);

@@ -19,6 +19,7 @@ private:
 
 	int apiUploadId;
 	int fileId;
+	std::string fileName;
 	uint64_t fileSize;
 	uint64_t fileMax;
 

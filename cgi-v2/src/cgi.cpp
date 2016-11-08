@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include "common.h"
+#include "webdownload.h"
 #include "webupload.h"
 
 using namespace std;
@@ -19,7 +20,7 @@ int CGI::run(int argc, char **argv) {
 	int ret;
 
 	socketPath = "/tmp/petro-upload-sock";
-	threadCount = 5;
+	threadCount = 16;
 
 	cfgWorkDir = dirname(argv[0]);
 	enableRun = true;
@@ -31,7 +32,7 @@ int CGI::run(int argc, char **argv) {
 	// Params
 	int c;
 
-	while ((c = getopt(argc, argv, "hd:p:")) != -1) {
+	while ((c = getopt(argc, argv, "hd:p:t:")) != -1) {
 		switch (c) {
 		case 'h':
 			// Print help
@@ -43,6 +44,9 @@ int CGI::run(int argc, char **argv) {
 		case 'p':
 			socketPath = optarg;
 			break;
+		case 't':
+			threadCount = static_cast<unsigned int>(std::atoi(optarg));
+			break;
 		default:
 			abort();
 		}
@@ -50,19 +54,19 @@ int CGI::run(int argc, char **argv) {
 
 	ret = FCGX_Init();
 	if (0 != ret) {
-		cerr << "Error FCGX_Init " << ret << endl;
+		ERR << "Error FCGX_Init: " << ret;
 		return 1;
 	}
 
 	socketHandle = FCGX_OpenSocket(socketPath.c_str(), 64);
 	if (socketHandle < 0) {
-		cerr << "Cant open socket " << socketPath << ", error " << errno << endl;
+		ERR << "Cant open socket " << socketPath << ", error " << errno;
 		return 2;
 	}
-	cout << "Started listen " << socketPath << endl;
+	MSG << "Started listen " << socketPath;
 
-	cout << "Starting threads: " << threadCount << endl;
-	cout << "Using upload root dir: " << cfgWorkDir << endl;
+	MSG << "Starting threads: " << threadCount;
+	MSG << "Using upload root dir: " << cfgWorkDir;
 
 	for (unsigned int x = 0; x < threadCount; x++) {
 		thread *t = new thread(&CGI::threadFunc, this, x);
@@ -79,7 +83,7 @@ int CGI::run(int argc, char **argv) {
 
 	close(socketHandle);
 
-	cout << "Stopping threads" << endl;
+	MSG << "Stopping threads";
 
 	for (thread *t : threadList) {
 		t->join();
@@ -91,7 +95,7 @@ int CGI::run(int argc, char **argv) {
 }
 
 void CGI::sighandler(int signal) {
-	cerr << "Signal " << signal << " catched" << endl;
+	WRN << "Signal " << signal << " catched";
 
 	// Stop threads
 	enableRun = false;
@@ -100,6 +104,7 @@ void CGI::sighandler(int signal) {
 void CGI::help() {
 	cout << "Usage: " << endl;
 	cout << "-h        : help" << endl;
+	cout << "-t <cnt>  : threads count (default 16)" << endl;
 	cout << "-d <dir>  : upload root directory" << endl;
 	cout << "-p <path> : socket path" << endl;
 }
@@ -118,13 +123,11 @@ void CGI::threadFunc(int id) {
 		if (-1 == ret)
 			break; // We cant do this work
 
-		cout << "Accepted [" << id << "]: " << FCGX_GetParam("REMOTE_ADDR", request.envp) << " " << FCGX_GetParam("REQUEST_URI", request.envp) << endl;
+		MSG << "Accepted [" << id << "]: " << FCGX_GetParam("REMOTE_ADDR", request.envp) << " " << FCGX_GetParam("REQUEST_URI", request.envp);
 
 		// Detect - what worker we should run?
 		string scriptName = FCGX_GetParam("SCRIPT_NAME", request.envp);
 		scriptName = strTrim(scriptName, "/");
-
-		cout << "z1: " << scriptName << endl;
 
 		vector<string> scriptNamePath = strExplode(scriptName, "/");
 
@@ -139,10 +142,17 @@ void CGI::threadFunc(int id) {
 				upload.init(&request);
 				upload.handleRequest();
 			}
+			if (string("d") == scriptNamePath[1] || string("f") == scriptNamePath[1]) {
+				requestPrecessed = true;
+				// Upload worker
+				WebDownload upload;
+				upload.init(&request);
+				upload.handleRequest();
+			}
 		}
 
 		if (!requestPrecessed) {
-			cout << "Invalid request" << endl;
+			ERR << "Invalid request " << scriptName;
 			FCGX_PutS("Status: 400\r\n", request.out);
 			FCGX_PutS("\r\n", request.out);
 			FCGX_PutS("Invalid request", request.out);
@@ -151,5 +161,5 @@ void CGI::threadFunc(int id) {
 		FCGX_Finish_r(&request);
 	}
 
-	cout << "Stopping thread #" << id << endl;
+	MSG << "Stopping thread #" << id;
 }

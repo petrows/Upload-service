@@ -17,6 +17,7 @@ public:
 
 protected:
 	virtual void finishHeaders();
+	std::string logHeader();
 
 	int httpReturnCode;
 	std::stringstream replyHeaders;

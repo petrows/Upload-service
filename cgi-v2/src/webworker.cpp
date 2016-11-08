@@ -46,3 +46,10 @@ void WebWorker::finishHeaders()
 
 	FCGX_PutS(replyHeaders.str().c_str(), request->out);
 }
+
+string WebWorker::logHeader()
+{
+	string t;
+	t += "[" + ip + "] ";
+	return t;
+}

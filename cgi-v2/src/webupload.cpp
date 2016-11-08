@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <sys/stat.h>
+#include <chrono>
 
 #define BUFF_SIZE (1 * 1024 * 1024)
 
@@ -13,10 +14,9 @@ using namespace std;
 WebUpload::WebUpload() {}
 
 void WebUpload::handleRequest() {
-	cout << "Cookie: " << cookie["PHPSESSID"] << endl;
-	cout << "Get: " << get["api"] << endl;
-
 	replyHeaders << "Connection: close\r\n";
+
+	lk = strMd5(cookie["auth"]);
 
 	apiMode = API_JSON;
 	if ("1" == get["api"]) {
@@ -27,8 +27,6 @@ void WebUpload::handleRequest() {
 		printError(101, "Session error");
 		return;
 	}
-
-	lk.append(strMd5(cookie["auth"]));
 
 	fileSize = 0;
 	if (FCGX_GetParam("CONTENT_LENGTH", request->envp))
@@ -44,6 +42,7 @@ void WebUpload::handleRequest() {
 	}
 
 	fileId = std::atoi(get["id"].c_str());
+	fileName = strUrlDecode(get["qqfile"]);
 
 	// Okay, upload The File
 	string filePathId = strMd5(get["s"]);
@@ -69,23 +68,30 @@ void WebUpload::handleRequest() {
 	// Set perms
 	chmod(filUploadPath.str().c_str(), 0666);
 
+	DBG << logHeader() << "Uploading file '" << fileName << "', size " << fileSize << ", id " << fileId;
+	chrono::milliseconds timeStart = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch());
+
 	// Read file data
-	char f_buf[BUFF_SIZE];
+	char *fileBuf = new char[BUFF_SIZE];
 	unsigned long long read_n = 0;
 	unsigned long long read_s = 0;
 	while (true) {
-		read_s = fread(f_buf, 1, BUFF_SIZE, stdin);
+		read_s = FCGX_GetStr(fileBuf, BUFF_SIZE, request->in);
+
 		if (read_s <= 0)
 			break;
 
 		read_n += read_s;
-		fwrite(f_buf, read_s, 1, fileHadle);
+		fwrite(fileBuf, read_s, 1, fileHadle);
 		if (read_n >= fileSize)
 			break; // All done...
 	}
 	fclose(fileHadle);
+	delete[] fileBuf;
 
-	cout << "Uploaded file with size " << fileSize << endl;
+	chrono::milliseconds timeStop = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch());
+
+	DBG << logHeader() << "Uploading file done, time " << (timeStop.count() - timeStart.count()) << " ms";
 
 	// On done - redirect to the file post-process
 	if (API_XML == apiMode) {
@@ -99,7 +105,7 @@ void WebUpload::handleRequest() {
 }
 
 void WebUpload::printError(int code, string message) {
-	cout << "Error: " << code << ", " << message;
+	ERR << logHeader() << "Error: " << code << ", " << message;
 	httpReturnCode = 401;
 
 	if (API_XML == apiMode) {
@@ -154,11 +160,15 @@ bool WebUpload::checkSid() {
 
 	vector<string> s_data = strExplode(configStr, ":");
 	if (s_data.size() < 5)
+	{
+		ERR << logHeader() << "Error reading file " << filePath.str();
 		return false; // Bad format
+	}
 
 	// Check auth vars...
-	if (s_data[1] != ip || s_data[2] != get["s"] || s_data[3] != this->lk) {
+	if (s_data[1] != ip || s_data[2] != get["s"] || s_data[3] != lk) {
 		// Error at auth!
+		ERR << logHeader() << "Auth error: " << s_data[1] << "!=" << ip << ", " << s_data[2] << "!=" << get["s"] << ", " << s_data[3] << "!=" << lk;
 		return false;
 	}
 

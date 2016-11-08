@@ -16,12 +16,16 @@
 <div id="upload_area" style="display:none;">
 	<p>
 		{{if cfg('ext_control')}}
-			<h3 class="p_title">{{$lang.fl_allow_ext}}:</h3>
-			{{$ext_t}}
-		{{/if}}
+	<h3 class="p_title">{{$lang.fl_allow_ext}}:</h3>
+	{{$ext_t}}
+	{{/if}}
 	</p>
 	<br clear="all"/>
-	<div id="upl-btn">{{$lang.fl_upload_btn}} <p style="padding:5px;margin:0px;"><small>{{$lang.fl_max_size_s}}: <b>{{format_size($max_size)}}</b></small></p></div>
+	<div id="upl-btn">{{$lang.fl_upload_btn}}
+		<p style="padding:5px;margin:0px;">
+			<small>{{$lang.fl_max_size_s}}: <b>{{format_size($max_size)}}</b></small>
+		</p>
+	</div>
 	<br clear="all"/>
 	<table id="upl-list" width="100%">
 		<tr>
@@ -33,12 +37,11 @@
 	</table>
 
 
-
 	<div id="file-uploader" style="display:none;">
-		<noscript>			
+		<noscript>
 			<p>Please enable JavaScript to use file uploader.</p>
 			<!-- or put a simple form for upload here -->
-		</noscript>         
+		</noscript>
 	</div>
 
 	<ul id="file-list"></ul>
@@ -49,7 +52,8 @@
 					<tr>
 						<th align="right" width="200">{{$lang.fl_descr}}:</th>
 						<td align="left">
-							<input type="text" name="files_descr" id="files_descr" placeholder="{{$lang.fl_descr_c}}" style="width:98%"/>
+							<input type="text" name="files_descr" id="files_descr" placeholder="{{$lang.fl_descr_c}}"
+							       style="width:98%"/>
 						</td>
 					</tr>
 					<tr>
@@ -61,20 +65,19 @@
 					<tr>
 						<th align="right"></th>
 						<td align="left">
-							<label><input type="checkbox" value="ON" name="files_ttl_prol" id="files_ttl_prol"/> {{$lang.ttl_prol}}</label>
+							<label><input type="checkbox" value="ON" name="files_ttl_prol"
+							              id="files_ttl_prol"/> {{$lang.ttl_prol}}</label>
 						</td>
 					</tr>
 				</table>
 			</div>
-		<input id="file-continue-btn" type="submit" value="..." onclick="final_upload();"/>
+			<input id="file-continue-btn" type="submit" value="..." onclick="final_upload();"/>
 		</form>
 	</div>
 </div>
-<script type="text/javascript">    
-	function createUploader()
-	{   
-		if (!is_xhr_support())
-		{
+<script type="text/javascript">
+	function createUploader() {
+		if (!is_xhr_support()) {
 			$('#xhr_not_support').show();
 			$('#upload_area').hide();
 			return;
@@ -82,21 +85,21 @@
 		$('#upload_area').show();
 		window.__uploader = new qq.FileUploader({
 			element: document.getElementById('file-uploader'),
-			action: '{{$_url}}/upload.cgi',
+			action: '{{$_url}}/api/u/',
 			params: {'s':'{{$sid}}'},
 			{{if cfg('ext_control')}}
-				allowedExtensions: [{{$ext_js}}],
+			allowedExtensions: [{{$ext_js}}],
 			{{/if}}
 			button: document.getElementById('upl-btn'),
 			//listElement: document.getElementById('file-list'),
 			//template: '',
 			fileTemplate: '<li>' +
-                '<span class="qq-upload-file"></span>' +
-                '<span class="qq-upload-spinner"></span>' +
-                '<span class="qq-upload-size"></span>' +
-                '<a class="qq-upload-cancel" href="#">Cancel</a>' +
-                '<span class="qq-upload-failed-text">Failed</span>' +
-            '</li>',      
+			'<span class="qq-upload-file"></span>' +
+			'<span class="qq-upload-spinner"></span>' +
+			'<span class="qq-upload-size"></span>' +
+			'<a class="qq-upload-cancel" href="#">Cancel</a>' +
+			'<span class="qq-upload-failed-text">Failed</span>' +
+			'</li>',
 			sizeLimit: {{$max_size}},
 			debug: true,
 			messages: {
@@ -104,55 +107,51 @@
 				sizeError: "{{$lang.fl_e_size}}",
 				minSizeError: "{{$lang.fl_e_minsize}}",
 				emptyError: "{{$lang.fl_e_empty}}",
-				onLeave: "{{$lang.fl_e_leave}}"            
+				onLeave: "{{$lang.fl_e_leave}}"
 			},
-			showMessage: function(message){
+			showMessage: function (message) {
 				alert(message);
 			},
-			onSubmit: function(id, fileName)
-			{
+			onSubmit: function (id, fileName) {
 				// window.__uploader.params['ttl'] = $('#files_ttl').val();
 				c_btn_status(false);
-				upl_new(id,fileName);
+				upl_new(id, fileName);
 				return true;
 			},
-			onProgress: function(id, fileName, loaded, total)
-			{
+			onProgress: function (id, fileName, loaded, total) {
 				c_btn_status(!c_upload_status());
-				upl_progress(id,fileName,loaded,total);
+				upl_progress(id, fileName, loaded, total);
 			},
-			onComplete: function(id, fileName, responseJSON)
-			{
+			onComplete: function (id, fileName, responseJSON) {
 				c_btn_status(!c_upload_status());
 				upl_done(id, fileName, responseJSON);
 			}
 		});
 	}
-	
-	
-	
+
+
 	// in your app create uploader as soon as the DOM is ready
 	// don't wait for the window to load  
 	window.onload = createUploader;
-	
-	if(document.getElementsByClassName) {
 
-		getElementsByClass = function(classList, node) {    
+	if (document.getElementsByClassName) {
+
+		getElementsByClass = function (classList, node) {
 			return (node || document).getElementsByClassName(classList)
 		}
 
 	} else {
 
-		getElementsByClass = function(classList, node) {			
+		getElementsByClass = function (classList, node) {
 			var node = node || document,
-			list = node.getElementsByTagName('*'), 
-			length = list.length,  
-			classArray = classList.split(/\s+/), 
-			classes = classArray.length, 
-			result = [], i,j
-			for(i = 0; i < length; i++) {
-				for(j = 0; j < classes; j++)  {
-					if(list[i].className.search('\\b' + classArray[j] + '\\b') != -1) {
+					list = node.getElementsByTagName('*'),
+					length = list.length,
+					classArray = classList.split(/\s+/),
+					classes = classArray.length,
+					result = [], i, j
+			for (i = 0; i < length; i++) {
+				for (j = 0; j < classes; j++) {
+					if (list[i].className.search('\\b' + classArray[j] + '\\b') != -1) {
 						result.push(list[i])
 						break
 					}
@@ -162,53 +161,48 @@
 			return result
 		}
 	}
-	
-	function is_xhr_support ()
-	{
+
+	function is_xhr_support() {
 		var input = document.createElement('input');
-		input.type = 'file'; 
-		
+		input.type = 'file';
+
 		return (
-			'multiple' in input &&
-			typeof File != "undefined" &&
-			typeof (new XMLHttpRequest()).upload != "undefined" );
+		'multiple' in input &&
+		typeof File != "undefined" &&
+		typeof (new XMLHttpRequest()).upload != "undefined" );
 	}
-	
-	function formatSize (bytes)
-	{
+
+	function formatSize(bytes) {
 		// bytes = bytes.MAX_VALUE;
-        var i = -1;                                    
-        do {
-            bytes = bytes / 1024;
-            i++;
-        } while (bytes > 1024);
-        
-        return Math.max(bytes, 0.01).toFixed(2) + '&nbsp;' + ['kB', 'MB', 'GB', 'TB', 'PB', 'EB'][i];          
-    }
-    
-    // alert (formatSize(100500100500123456789));
-	
-	function row2id (id)
-	{
-		var itm = document.getElementById('upl-list').firstChild;
-		while (itm)
-		{            
-			if (itm.fileId == id) return itm;            
-			itm = itm.nextSibling;
-        }
+		var i = -1;
+		do {
+			bytes = bytes / 1024;
+			i++;
+		} while (bytes > 1024);
+
+		return Math.max(bytes, 0.01).toFixed(2) + '&nbsp;' + ['kB', 'MB', 'GB', 'TB', 'PB', 'EB'][i];
 	}
-	
-	function upl_new (id, fileName)
-	{
+
+	// alert (formatSize(100500100500123456789));
+
+	function row2id(id) {
+		var itm = document.getElementById('upl-list').firstChild;
+		while (itm) {
+			if (itm.fileId == id) return itm;
+			itm = itm.nextSibling;
+		}
+	}
+
+	function upl_new(id, fileName) {
 		var row = document.createElement('tr');
-		fileName.replace(/</g,'&lt;');
-		fileName.replace(/>/g,'&gt;');
+		fileName.replace(/</g, '&lt;');
+		fileName.replace(/>/g, '&gt;');
 		// alert(fileName);
-		
+
 		var td;
 		td = document.createElement('td');
 		td.className = "ulist-id";
-		td.innerHTML = (id+1);
+		td.innerHTML = (id + 1);
 		row.appendChild(td);
 		td = document.createElement('td');
 		td.className = "ulist-name";
@@ -222,69 +216,60 @@
 		td.className = "ulist-status";
 		td.innerHTML = ' - ';
 		row.appendChild(td);
-		
+
 		//row.innerHTML = '<td class="ulist-id">'+(id+1)+'</td><td class="ulist-name">'+fileName+'</td><td class="ulist-size">-</td><td class="ulist-status">-</td>';
 		row.fileId = id;
 		document.getElementById('upl-list').appendChild(row);
-	}	
-	function upl_progress (id, fileName, loaded, total)
-	{
+	}
+	function upl_progress(id, fileName, loaded, total) {
 		var row = row2id(id);
 		if (!row) return;
-		
-		getElementsByClass('ulist-size',row)[0].innerHTML = formatSize(loaded) + ' / ' + formatSize(total);
-		
+
+		getElementsByClass('ulist-size', row)[0].innerHTML = formatSize(loaded) + ' / ' + formatSize(total);
+
 		var pers = Math.round(loaded / total * 100);
-		var sz = (200/100)*pers;
-		getElementsByClass('ulist-status',row)[0].innerHTML = '{{$lang.fl_s_loading}}: <b>'+pers+'</b>% '+make_progress_bar(pers);
+		var sz = (200 / 100) * pers;
+		getElementsByClass('ulist-status', row)[0].innerHTML = '{{$lang.fl_s_loading}}: <b>' + pers + '</b>% ' + make_progress_bar(pers);
 	}
-	function make_progress_bar(pers)
-	{
+	function make_progress_bar(pers) {
 		var out = '';
-		out += '<span class="ulist-progress"><span class="ulist-progress-bar" style="width:'+pers+'%;"><img src="{{$_url}}/tpl/img/spacer.gif" alt=""/></span></span>';
-		
+		out += '<span class="ulist-progress"><span class="ulist-progress-bar" style="width:' + pers + '%;"><img src="{{$_url}}/tpl/img/spacer.gif" alt=""/></span></span>';
+
 		return out;
 	}
-	function upl_done (id, fileName, responseJSON)
-	{
+	function upl_done(id, fileName, responseJSON) {
 		var row = row2id(id);
 		if (!row) return;
-		
-		if (responseJSON['success'])
-		{
+
+		if (responseJSON['success']) {
 			// Upload is OK!
-			getElementsByClass('ulist-status',row)[0].innerHTML = '<span class="ulist-s-ok">{{$lang.fl_s_loaded}}</span>';
+			getElementsByClass('ulist-status', row)[0].innerHTML = '<span class="ulist-s-ok">{{$lang.fl_s_loaded}}</span>';
 			return;
 		}
-		if (responseJSON['error'])
-		{
+		if (responseJSON['error']) {
 			// Upload is OK!
-			getElementsByClass('ulist-status',row)[0].innerHTML = '<span class="ulist-s-error">{{$lang.fl_s_error}}: '+responseJSON['error']+'</span>';
+			getElementsByClass('ulist-status', row)[0].innerHTML = '<span class="ulist-s-error">{{$lang.fl_s_error}}: ' + responseJSON['error'] + '</span>';
 			return;
 		}
-		
-		getElementsByClass('ulist-status',row)[0].innerHTML = '<span class="ulist-s-error">{{$lang.fl_s_uerror}}</span>';
+
+		getElementsByClass('ulist-status', row)[0].innerHTML = '<span class="ulist-s-error">{{$lang.fl_s_uerror}}</span>';
 	}
-	
-	function c_upload_status ()
-	{
+
+	function c_upload_status() {
 		return window.__uploader.getInProgress();
 	}
-	function c_btn_status (enabled)
-	{
-		$('#file-continue').css('display','');
-		if (enabled)
-		{
+	function c_btn_status(enabled) {
+		$('#file-continue').css('display', '');
+		if (enabled) {
 			$('#file-continue-btn').removeAttr('disabled');
-			$('#file-continue-btn').attr('value',' {{$lang.fl_btn_continue}} ');
+			$('#file-continue-btn').attr('value', ' {{$lang.fl_btn_continue}} ');
 		} else {
-			$('#file-continue-btn').attr('disabled','disabled');
-			$('#file-continue-btn').attr('value',' {{$lang.fl_btn_wait}} ');
+			$('#file-continue-btn').attr('disabled', 'disabled');
+			$('#file-continue-btn').attr('value', ' {{$lang.fl_btn_wait}} ');
 		}
-	}	
-	
-	function final_upload ()
-	{
+	}
+
+	function final_upload() {
 		if (c_upload_status()) return false;
 		return true;
 	}
