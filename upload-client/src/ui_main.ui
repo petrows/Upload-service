@@ -37,9 +37,23 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="btnClipUpload">
+        <property name="text">
+         <string>Clipboard</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../res/res.qrc">
+          <normaloff>:/icons/up</normaloff>:/icons/up</iconset>
+        </property>
+        <property name="shortcut">
+         <string>Ctrl+V</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="btnNewUpload">
         <property name="text">
-         <string>New Upload</string>
+         <string>File</string>
         </property>
         <property name="icon">
          <iconset resource="../res/res.qrc">
@@ -57,12 +71,12 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="actionSettings"/>
     <addaction name="actionHide"/>
@@ -71,13 +85,13 @@
    </widget>
    <widget class="QMenu" name="menuUpload">
     <property name="title">
-     <string>Upload</string>
+     <string>&amp;Upload</string>
     </property>
     <addaction name="actionNew_upload"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
-     <string>About</string>
+     <string>A&amp;bout</string>
     </property>
     <addaction name="actionUpdatesMenu"/>
     <addaction name="actionAbout_program"/>
@@ -95,7 +109,7 @@
      <normaloff>:/icons/arrow-315</normaloff>:/icons/arrow-315</iconset>
    </property>
    <property name="text">
-    <string>Hide</string>
+    <string>&amp;Hide</string>
    </property>
   </action>
   <action name="actionExit">
@@ -104,7 +118,7 @@
      <normaloff>:/icons/cross-button</normaloff>:/icons/cross-button</iconset>
    </property>
    <property name="text">
-    <string>Exit</string>
+    <string>&amp;Exit</string>
    </property>
   </action>
   <action name="actionNew_upload">
@@ -113,7 +127,7 @@
      <normaloff>:/icons/up</normaloff>:/icons/up</iconset>
    </property>
    <property name="text">
-    <string>New upload...</string>
+    <string>&amp;New upload...</string>
    </property>
   </action>
   <action name="actionSettings">
@@ -122,27 +136,27 @@
      <normaloff>:/icons/hammer-screwdriver</normaloff>:/icons/hammer-screwdriver</iconset>
    </property>
    <property name="text">
-    <string>Settings...</string>
+    <string>&amp;Settings...</string>
    </property>
   </action>
   <action name="actionUpdatesMenu">
    <property name="text">
-    <string notr="true">updatesMenu</string>
+    <string notr="true">&amp;updatesMenu</string>
    </property>
   </action>
   <action name="actionAbout_program">
    <property name="text">
-    <string>About program...</string>
+    <string>&amp;About program...</string>
    </property>
   </action>
   <action name="actionHome_page">
    <property name="text">
-    <string>Home page</string>
+    <string>&amp;Home page</string>
    </property>
   </action>
   <action name="actionAbout_Qt">
    <property name="text">
-    <string>About Qt...</string>
+    <string>About &amp;Qt...</string>
    </property>
   </action>
  </widget>

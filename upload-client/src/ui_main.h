@@ -40,6 +40,8 @@ private slots:
 
 	void on_actionAbout_Qt_triggered();
 
+	void on_btnClipUpload_clicked();
+
 private:
 	Ui::ui_main *ui;
 };
