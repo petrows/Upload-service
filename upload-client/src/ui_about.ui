@@ -82,7 +82,7 @@
    <item>
     <widget class="QLabel" name="lblOwner">
      <property name="text">
-      <string>&lt;center&gt;Production of &lt;a href=&quot;http://www.petro.ws/&quot;&gt;&lt;b&gt;Kedr.inc&lt;/b&gt;&lt;/a&gt; / &lt;a href=&quot;http://www.petro.ws/&quot;&gt;&lt;b&gt;petro.ws&lt;/b&gt;&lt;/a&gt; group.</string>
+      <string>&lt;center&gt;Production of &lt;a href=&quot;http://www.petro.ws/&quot;&gt;&lt;b&gt;petro.ws&lt;/b&gt;&lt;/a&gt;.</string>
      </property>
     </widget>
    </item>

@@ -1,30 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ru" sourcelanguage="en">
+<TS version="2.1" language="ru" sourcelanguage="en">
+<context>
+    <name>QuaZipFilePrivate</name>
+    <message>
+        <location filename="../3dpatry/quazip/quazipfile.cpp" line="172"/>
+        <source>ZIP/UNZIP API error %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>u_api</name>
     <message>
-        <location filename="../src/u_api.cpp" line="97"/>
+        <location filename="../src/u_api.cpp" line="100"/>
         <source>API answer error</source>
         <translation>Ошибка API</translation>
     </message>
     <message>
-        <location filename="../src/u_api.cpp" line="115"/>
+        <location filename="../src/u_api.cpp" line="118"/>
         <source>Unknown API Method</source>
         <translation>Неизвестный метод API</translation>
     </message>
     <message>
-        <location filename="../src/u_api.cpp" line="117"/>
+        <location filename="../src/u_api.cpp" line="120"/>
         <source>Login error. Check your Login/Password settings.</source>
         <translation>Ошибка входа. Проверьте ваши настройки Логина и Пароля.</translation>
     </message>
     <message>
-        <location filename="../src/u_api.cpp" line="119"/>
+        <location filename="../src/u_api.cpp" line="122"/>
         <source>Session error. Please, restart program.</source>
         <translation>Ошибка сессии, пожалуйста, перезапустите программу.</translation>
     </message>
     <message>
-        <location filename="../src/u_api.cpp" line="121"/>
+        <location filename="../src/u_api.cpp" line="124"/>
+        <source>File is too large</source>
+        <translation>Файл слишком большой</translation>
+    </message>
+    <message>
+        <location filename="../src/u_api.cpp" line="126"/>
         <source>Unknown error: %1</source>
         <translation>Неизместная ошибка: %1</translation>
     </message>
@@ -173,22 +186,22 @@
 <context>
     <name>u_upload</name>
     <message>
-        <location filename="../src/u_upload.cpp" line="280"/>
+        <location filename="../src/u_upload.cpp" line="279"/>
         <source>min(s)</source>
         <translation>мин.</translation>
     </message>
     <message>
-        <location filename="../src/u_upload.cpp" line="282"/>
+        <location filename="../src/u_upload.cpp" line="281"/>
         <source>hour(s)</source>
         <translation>час.</translation>
     </message>
     <message>
-        <location filename="../src/u_upload.cpp" line="284"/>
+        <location filename="../src/u_upload.cpp" line="283"/>
         <source>day(s)</source>
         <translation>дн.</translation>
     </message>
     <message>
-        <location filename="../src/u_upload.cpp" line="517"/>
+        <location filename="../src/u_upload.cpp" line="485"/>
         <source>Untitled upload</source>
         <translation>Новая загрузка</translation>
     </message>
@@ -217,8 +230,12 @@
     </message>
     <message>
         <location filename="../src/ui_about.ui" line="85"/>
+        <source>&lt;center&gt;Production of &lt;a href=&quot;http://www.petro.ws/&quot;&gt;&lt;b&gt;petro.ws&lt;/b&gt;&lt;/a&gt;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&lt;center&gt;Production of &lt;a href=&quot;http://www.petro.ws/&quot;&gt;&lt;b&gt;Kedr.inc&lt;/b&gt;&lt;/a&gt; / &lt;a href=&quot;http://www.petro.ws/&quot;&gt;&lt;b&gt;petro.ws&lt;/b&gt;&lt;/a&gt; group.</source>
-        <translation>&lt;center&gt;Производство &lt;a href=&quot;http://www.petro.ws/&quot;&gt;&lt;b&gt;Kedr.inc&lt;/b&gt;&lt;/a&gt; и &lt;a href=&quot;http://www.petro.ws/&quot;&gt;&lt;b&gt;petro.ws&lt;/b&gt;&lt;/a&gt;.</translation>
+        <translation type="vanished">&lt;center&gt;Производство &lt;a href=&quot;http://www.petro.ws/&quot;&gt;&lt;b&gt;petro.ws&lt;/b&gt;&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../src/ui_about.ui" line="99"/>
@@ -266,66 +283,116 @@
     </message>
     <message>
         <location filename="../src/ui_main.ui" line="42"/>
-        <source>New Upload</source>
-        <translation>Новая загрузка</translation>
+        <source>Clipboard</source>
+        <translation>Буфер обмена</translation>
     </message>
     <message>
-        <location filename="../src/ui_main.ui" line="65"/>
+        <location filename="../src/ui_main.ui" line="49"/>
+        <source>Ctrl+V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ui_main.ui" line="79"/>
+        <source>&amp;File</source>
+        <translation>&amp;Файл</translation>
+    </message>
+    <message>
+        <location filename="../src/ui_main.ui" line="88"/>
+        <source>&amp;Upload</source>
+        <translation>&amp;Загрузить</translation>
+    </message>
+    <message>
+        <location filename="../src/ui_main.ui" line="94"/>
+        <source>A&amp;bout</source>
+        <translation>&amp;О программе</translation>
+    </message>
+    <message>
+        <location filename="../src/ui_main.ui" line="112"/>
+        <source>&amp;Hide</source>
+        <translation>&amp;Скрыть</translation>
+    </message>
+    <message>
+        <location filename="../src/ui_main.ui" line="121"/>
+        <source>&amp;Exit</source>
+        <translation>&amp;Выход</translation>
+    </message>
+    <message>
+        <location filename="../src/ui_main.ui" line="130"/>
+        <source>&amp;New upload...</source>
+        <translation>&amp;Новая загрузка...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui_main.ui" line="139"/>
+        <source>&amp;Settings...</source>
+        <translation>&amp;Настройки...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui_main.ui" line="149"/>
+        <source>&amp;About program...</source>
+        <translation>&amp;О программе...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui_main.ui" line="154"/>
+        <source>&amp;Home page</source>
+        <translation>&amp;Домашняя страница</translation>
+    </message>
+    <message>
+        <location filename="../src/ui_main.ui" line="159"/>
+        <source>About &amp;Qt...</source>
+        <translation>О &amp;Qt...</translation>
+    </message>
+    <message>
+        <source>New Upload</source>
+        <translation type="vanished">Новая загрузка</translation>
+    </message>
+    <message>
+        <location filename="../src/ui_main.ui" line="56"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../src/ui_main.ui" line="74"/>
         <source>Upload</source>
-        <translation>Загрузка</translation>
+        <translation type="vanished">Загрузка</translation>
     </message>
     <message>
-        <location filename="../src/ui_main.ui" line="80"/>
         <source>About</source>
-        <translation>О программе</translation>
+        <translation type="vanished">О программе</translation>
     </message>
     <message>
-        <location filename="../src/ui_main.ui" line="98"/>
         <source>Hide</source>
-        <translation>Скрыть</translation>
+        <translation type="vanished">Скрыть</translation>
     </message>
     <message>
-        <location filename="../src/ui_main.ui" line="107"/>
         <source>Exit</source>
-        <translation>Выход</translation>
+        <translation type="vanished">Выход</translation>
     </message>
     <message>
-        <location filename="../src/ui_main.ui" line="116"/>
         <source>New upload...</source>
-        <translation>Новая загрузка...</translation>
+        <translation type="vanished">Новая загрузка...</translation>
     </message>
     <message>
-        <location filename="../src/ui_main.ui" line="125"/>
         <source>Settings...</source>
-        <translation>Настройки...</translation>
+        <translation type="vanished">Настройки...</translation>
     </message>
     <message>
-        <location filename="../src/ui_main.ui" line="135"/>
         <source>About program...</source>
-        <translation>О программе...</translation>
+        <translation type="vanished">О программе...</translation>
     </message>
     <message>
-        <location filename="../src/ui_main.ui" line="140"/>
         <source>Home page</source>
-        <translation>Домашняя страница</translation>
+        <translation type="vanished">Домашняя страница</translation>
     </message>
     <message>
-        <location filename="../src/ui_main.ui" line="145"/>
         <source>About Qt...</source>
-        <translation>О Qt...</translation>
+        <translation type="vanished">О Qt...</translation>
     </message>
     <message>
-        <location filename="../src/ui_main.cpp" line="25"/>
+        <location filename="../src/ui_main.cpp" line="23"/>
         <source>New version avaliable!</source>
         <translation>Новая версия доступна!</translation>
     </message>
     <message>
-        <location filename="../src/ui_main.cpp" line="31"/>
+        <location filename="../src/ui_main.cpp" line="29"/>
         <source>You are using latest version.</source>
         <translation>Вы используете новейшую версию.</translation>
     </message>
@@ -569,87 +636,92 @@
         <translation>Время удаления:</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="45"/>
+        <location filename="../src/ui_upload.cpp" line="38"/>
+        <source>Upload error!</source>
+        <translation>Ошибка загрузки!</translation>
+    </message>
+    <message>
+        <location filename="../src/ui_upload.cpp" line="44"/>
         <source>%1% : Uploading</source>
         <translation>%1% : Загружаю</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="47"/>
+        <location filename="../src/ui_upload.cpp" line="46"/>
         <source>%1/s</source>
         <translation>%1/с</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="53"/>
+        <location filename="../src/ui_upload.cpp" line="51"/>
         <source>Upload %1 : %2</source>
         <translation>Загрузка %1 : %2</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="81"/>
+        <location filename="../src/ui_upload.cpp" line="75"/>
         <source>Saving...</source>
         <translation>Сохранение...</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="84"/>
+        <location filename="../src/ui_upload.cpp" line="78"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="92"/>
+        <location filename="../src/ui_upload.cpp" line="84"/>
         <source>Deleting...</source>
         <translation>Удаление...</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="95"/>
+        <location filename="../src/ui_upload.cpp" line="87"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="113"/>
+        <location filename="../src/ui_upload.cpp" line="105"/>
         <source>Settings saved</source>
         <translation>Настройки сохранены</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="113"/>
+        <location filename="../src/ui_upload.cpp" line="105"/>
         <source>Your upload info &amp; settings are saved!</source>
         <translation>Ваши настройки для этой загрузки сохранены!</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="115"/>
+        <location filename="../src/ui_upload.cpp" line="107"/>
         <source>Settings save error</source>
         <translation>Ошибка сохранения настроек</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="123"/>
+        <location filename="../src/ui_upload.cpp" line="114"/>
         <source>Delete upload?</source>
         <translation>Удалить загрузку?</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="123"/>
+        <location filename="../src/ui_upload.cpp" line="114"/>
         <source>Are you sure what you want to DELETE this upload?</source>
         <translation>Вы уверены что хотите УДАЛИТЬ эту загрузку?</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="130"/>
+        <location filename="../src/ui_upload.cpp" line="120"/>
         <source>Upload deleted</source>
         <translation>Загрузка удалена</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="130"/>
+        <location filename="../src/ui_upload.cpp" line="120"/>
         <source>Your upload was deleted!</source>
         <translation>Загрызка была успешно удалена!</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="134"/>
+        <location filename="../src/ui_upload.cpp" line="124"/>
         <source>Deleteion error</source>
         <translation>Ошибка удаления</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="143"/>
+        <location filename="../src/ui_upload.cpp" line="132"/>
         <source>Stop upload?</source>
         <translation>Остановить загрузку?</translation>
     </message>
     <message>
-        <location filename="../src/ui_upload.cpp" line="143"/>
+        <location filename="../src/ui_upload.cpp" line="132"/>
         <source>Are you shure to sop this uploading?</source>
         <translation>Вы уверены что хотите отменить загрузку?</translation>
     </message>
