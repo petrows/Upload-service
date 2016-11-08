@@ -2,19 +2,23 @@
 
 if (!defined('IN_K')) exit ('No Access');
 
-if (!defined('URL'))
-{
-	$our_url = "http://".$_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+if (!@$_SERVER["REQUEST_SCHEME"]) {
+	$_SERVER["REQUEST_SCHEME"] = 'http';
+	if (@$_SERVER["HTTPS"]) {
+		$_SERVER["REQUEST_SCHEME"] = 'https';
+	}
+}
+
+$our_url = $_SERVER["REQUEST_SCHEME"] . "://" . $_SERVER['HTTP_HOST'] . htmlspecialchars(rtrim(dirname($_SERVER['PHP_SELF']), '/\\'));
+
+if (!defined('URL')) {	
 	define ('URL',$our_url);
 }
 
-$our_url = "http://".$_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-if (!defined('SITE_URL_ABS'))
-{
+if (!defined('SITE_URL_ABS')) {
 	define ('SITE_URL_ABS',$our_url);
 }
-if (!defined('SITE_URL_SCRIPT'))
-{
+if (!defined('SITE_URL_SCRIPT')) {
 	define ('SITE_URL_SCRIPT',$our_url);
 }
 
@@ -25,7 +29,7 @@ $cookie_domain = '.'.$cookie_domain;
 define ('COOKIE_DOMAIN', $cookie_domain);
 
 # Current URL
-define ('URL_CURRENT', 'http://'.$_SERVER['HTTP_HOST'].''.$_SERVER['REQUEST_URI']);
+define ('URL_CURRENT', 'http://'.$_SERVER['HTTP_HOST'].htmlspecialchars($_SERVER['REQUEST_URI']));
 
 # Magic_quotes
 function strip_mc ($var)

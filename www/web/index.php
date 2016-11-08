@@ -3,8 +3,10 @@
 session_start();
 
 define ('IN_K', true);
-define ('ROOT_PATH', dirname(__FILE__));
+define ('WEB_PATH', realpath(dirname(__FILE__)));
+define ('ROOT_PATH', realpath(dirname(__FILE__).'/../'));
 define ('CORE_PATH', ROOT_PATH.'/core');
+define ('TPL_DIR', WEB_PATH.'/tpl');
 
 $GLOBALS['config'] = array ();
 require CORE_PATH.'/config.php';
