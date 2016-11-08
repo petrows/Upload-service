@@ -62,21 +62,21 @@ class attach
 
 	function untemp ($new_id)
 	{
-		kdb_query ('UPDATE `site_attach_post` SET `id_2`='.$new_id.' WHERE `id_1`=\''.$this->id_1.'\' AND `id_2`='.$this->id_2.' AND `uid`='.user('id'));
+		ldb_query ('UPDATE `site_attach_post` SET `id_2`='.$new_id.' WHERE `id_1`=\''.$this->id_1.'\' AND `id_2`='.$this->id_2.' AND `uid`='.user('id'));
 	}
 
 	function file_link ($data)
 	{
-		if (!is_array($data)) $data = kdb_select_one('site_attach_files', '*', $data);
+		if (!is_array($data)) $data = ldb_select_one('site_attach_files', '*', $data);
 		if (!$data) return;
 		return URL.'/file/'.$data['id'].'/'.$data['key'].'/'.rawurlencode($data['file_name']);
 	}
 	
 	function get_cform (&$fg)
 	{
-		$cnt = kdb_count ('site_attach_post','`id_1`=\''.$this->id_1.'\' AND `id_2`='.$this->id_2);
+		$cnt = ldb_count ('site_attach_post','`id_1`=\''.$this->id_1.'\' AND `id_2`='.$this->id_2);
 		
-		$tpl = new tpl('att_main');
+		$tpl = new ltpl('att_main');
 		$tpl->v('id1', $this->id_1);
 		$tpl->v('id2', $this->id_2);
 		$tpl->v('cnt', $cnt);
@@ -93,39 +93,39 @@ class attach
 		if (!is_uploaded_file(@$file_data['tmp_name'])) return false;
 
 		# Add file!!
-		$kdb_data = array ();
-		$kdb_data['file_name']	= $file_data['name'];
-		$kdb_data['file_name']	= preg_replace ('/\.+/', '.', $kdb_data['file_name']);
-		$kdb_data['file_name']	= preg_replace ('/[^\pL\d,._\- ]/Uuims', ' ', $kdb_data['file_name']);
-		$kdb_data['file_name']	= preg_replace ('/\s+/Uuims', ' ', $kdb_data['file_name']);
-		$kdb_data['file_name']	= trim ($kdb_data['file_name']);
+		$ldb_data = array ();
+		$ldb_data['file_name']	= $file_data['name'];
+		$ldb_data['file_name']	= preg_replace ('/\.+/', '.', $ldb_data['file_name']);
+		$ldb_data['file_name']	= preg_replace ('/[^\pL\d,._\- ]/Uuims', ' ', $ldb_data['file_name']);
+		$ldb_data['file_name']	= preg_replace ('/\s+/Uuims', ' ', $ldb_data['file_name']);
+		$ldb_data['file_name']	= trim ($ldb_data['file_name']);
 
-		$kdb_data['file_size']	= filesize($file_data['tmp_name']);
-		$kdb_data['uid']			= user('id');
-		$kdb_data['tms_upload']	= time();
-		$kdb_data['links_count']	= 1;
-		$kdb_data['file_mime']	= @ $file_data['type'];
-		$kdb_data['att_type']	= @ $file_data['att_type']?$file_data['att_type']:'ATTACH';
-		$kdb_data['att_type2']	= @ $file_data['att_type2'];
-		$kdb_data['key']			= md5(md5(mt_rand().time().implode(';',$kdb_data).@$_SERVER['HTTP_USER_AGENT']));
+		$ldb_data['file_size']	= filesize($file_data['tmp_name']);
+		$ldb_data['uid']			= user('id');
+		$ldb_data['tms_upload']	= time();
+		$ldb_data['links_count']	= 1;
+		$ldb_data['file_mime']	= @ $file_data['type'];
+		$ldb_data['att_type']	= @ $file_data['att_type']?$file_data['att_type']:'ATTACH';
+		$ldb_data['att_type2']	= @ $file_data['att_type2'];
+		$ldb_data['key']			= md5(md5(mt_rand().time().implode(';',$ldb_data).@$_SERVER['HTTP_USER_AGENT']));
 
-		$file_id = kdb_insert('site_attach_files', $kdb_data);
+		$file_id = ldb_insert('site_attach_files', $ldb_data);
 
 		if (!copy ($file_data['tmp_name'], ROOT_PATH.'/uploads/att-'.$file_id.'.dat'))
 		{
-			kdb_query ('DELETE FROM `site_attach_files` WHERE `id`='.$file_id);
+			ldb_query ('DELETE FROM `site_attach_files` WHERE `id`='.$file_id);
 			return false;
 		}
 
 		# Save data file
-		file_put_contents(ROOT_PATH.'/uploads/att-'.$file_id.'.inf', serialize($kdb_data));
+		file_put_contents(ROOT_PATH.'/uploads/att-'.$file_id.'.inf', serialize($ldb_data));
 
 		return $file_id;
 	}
 
 	function remove_post ()
 	{
-		kdb_query ('DELETE FROM `site_attach_post` WHERE `id_1`=\''.$this->id_1.'\' AND `id_2`='.$this->id_2);
+		ldb_query ('DELETE FROM `site_attach_post` WHERE `id_1`=\''.$this->id_1.'\' AND `id_2`='.$this->id_2);
 		attach::recount();
 	}
 
@@ -133,21 +133,21 @@ class attach
 	{
 		if (!is_array($ids)) $ids = array($ids);
 		# Decrease links count
-		kdb_query ('UPDATE `site_attach_files` SET `links_count`=`links_count`-1 WHERE `id` IN ('.implode(',', $ids).')');
+		ldb_query ('UPDATE `site_attach_files` SET `links_count`=`links_count`-1 WHERE `id` IN ('.implode(',', $ids).')');
 		attach::recount();
 	}
 
 	function recount()
 	{
 		# Delete old attached (temp) files
-		kdb_query ('DELETE FROM `site_attach_post` WHERE `id_2`<0 AND `tms_added`<'.(time()-86400));
+		ldb_query ('DELETE FROM `site_attach_post` WHERE `id_2`<0 AND `tms_added`<'.(time()-86400));
 
 		# Recount link's count
-		# kdb_query ('UPDATE `site_attach_files` SET `links_count`=(SELECT COUNT(*) FROM `site_attach_post` WHERE `site_attach_post`.`file_id`=`site_attach_files`.`id`) WHERE `id` IN ('.implode($ids).')');
-		kdb_query ('UPDATE `site_attach_files` SET `links_count`=(SELECT COUNT(*) FROM `site_attach_post` WHERE `site_attach_post`.`file_id`=`site_attach_files`.`id`) WHERE `att_type`=\'ATTACH\'');
+		# ldb_query ('UPDATE `site_attach_files` SET `links_count`=(SELECT COUNT(*) FROM `site_attach_post` WHERE `site_attach_post`.`file_id`=`site_attach_files`.`id`) WHERE `id` IN ('.implode($ids).')');
+		ldb_query ('UPDATE `site_attach_files` SET `links_count`=(SELECT COUNT(*) FROM `site_attach_post` WHERE `site_attach_post`.`file_id`=`site_attach_files`.`id`) WHERE `att_type`=\'ATTACH\'');
 
 		# Delete attaches without parents
-		$data = kdb_select ('site_attach_files','*','`links_count`<=0');
+		$data = ldb_select ('site_attach_files','*','`links_count`<=0');
 		if ($data)
 		{
 			for ($x=0; $x<count($data); $x++)
@@ -155,7 +155,7 @@ class attach
 				@ unlink (ROOT_PATH.'/uploads/att-'.$data[$x]['id'].'.dat');
 				@ unlink (ROOT_PATH.'/uploads/att-'.$data[$x]['id'].'.inf');
 			}
-			kdb_query ('DELETE FROM `site_attach_files` WHERE `id` IN ('.implode(',',array_ids($data)).')');
+			ldb_query ('DELETE FROM `site_attach_files` WHERE `id` IN ('.implode(',',array_ids($data)).')');
 		}
 	}
 
@@ -191,7 +191,7 @@ class attach
 	function get_img_prev ()
 	{
 		# Get attached files
-		$data = kdb_select ('site_attach_files','*','`id` IN (SELECT `file_id` FROM `site_attach_post` WHERE `id_1`=\''.$this->id_1.'\' AND `id_2`='.$this->id_2.')');
+		$data = ldb_select ('site_attach_files','*','`id` IN (SELECT `file_id` FROM `site_attach_post` WHERE `id_1`=\''.$this->id_1.'\' AND `id_2`='.$this->id_2.')');
 		if (!$data) return false;
 		$out = array ('cnt'=>0, 'url'=>'');
 
@@ -211,7 +211,7 @@ class attach
 	function get_video_prev ()
 	{
 		# Get attached files
-		$data = kdb_select ('site_attach_files','*','`id` IN (SELECT `file_id` FROM `site_attach_post` WHERE `id_1`=\''.$this->id_1.'\' AND `id_2`='.$this->id_2.')');
+		$data = ldb_select ('site_attach_files','*','`id` IN (SELECT `file_id` FROM `site_attach_post` WHERE `id_1`=\''.$this->id_1.'\' AND `id_2`='.$this->id_2.')');
 		if (!$data) return false;
 		$out = 0;
 		for ($x=0; $x<count($data); $x++)
@@ -228,7 +228,7 @@ class attach
 
 	function post_attach ($text)
 	{
-		$data = kdb_select ('site_attach_files','*','`id` IN (SELECT `file_id` FROM `site_attach_post` WHERE `id_1`=\''.$this->id_1.'\' AND `id_2`='.$this->id_2.')');
+		$data = ldb_select ('site_attach_files','*','`id` IN (SELECT `file_id` FROM `site_attach_post` WHERE `id_1`=\''.$this->id_1.'\' AND `id_2`='.$this->id_2.')');
 		if (!$data) return '';
 		
 		$data = array_id2key($data);
@@ -289,7 +289,7 @@ class attach
 			$out .= '<a name="attach_video"></a>';
 			$out .= '<h3>Видео</h3>';
 
-			$tpl = new tpl ('attach_video');
+			$tpl = new ltpl ('attach_video');
 			$list = '';
 			$init = array ();
 			foreach ($types['fvideo'] as $att)

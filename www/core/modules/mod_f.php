@@ -21,7 +21,7 @@ class mod_f extends module_template
 			$public = true;
 		
 		$sid = input(1);
-		$u_data = kdb_select_one('upload', '*', $sid, 'code');
+		$u_data = ldb_select_one('upload', '*', $sid, 'code');
 		
 		if (!$u_data)
 		{
@@ -53,7 +53,7 @@ class mod_f extends module_template
 		
 		page_title(sprintf(lang('fld_title_n'),$u_data['id']));
 		
-		$f_data = kdb_select('file','*','`upid`='.$u_data['id']);
+		$f_data = ldb_select('file','*','`upid`='.$u_data['id']);
 		
 		
 		$u_data['time_added'] = date('d.m.Y H:i',$u_data['tms_upload']);
@@ -71,7 +71,7 @@ class mod_f extends module_template
 			$fd['size'] = format_size($fd['file_size']);
 			$fd['name'] = htmlspecialchars($fd['file_name']);
 			
-			$tpl = new tpl ('download-file-item');
+			$tpl = new ltpl ('download-file-item');
 			$tpl->v('f',$fd);
 			$tpl->v('f_link',$f_link);
 			$tpl->v('f_link_f',$f_flink);
@@ -90,7 +90,7 @@ class mod_f extends module_template
 		
 		$u_data['publink'] = URL.'/f/'.$u_data['code'].'/'.$u_data['ph'].'/';
 		
-		$tpl = new tpl ('download-file');		
+		$tpl = new ltpl ('download-file');
 		$tpl->v('u_data',$u_data);
 		$tpl->v('f_list',$f_list);
 		$tpl->v('ttl_sel',$ttl_s);
@@ -118,7 +118,7 @@ class mod_f extends module_template
 		}
 		$db_data['ttl'] = $ttl;
 		$db_data['comment'] = @$_POST['files_descr'];
-		kdb_update_by_id('upload', $data['id'], $db_data);
+		ldb_update_by_id('upload', $data['id'], $db_data);
 		
 		redirect_msg(URL.'/f/'.$data['code'].'/?', lang('save_ok'));
 		exit();
@@ -126,7 +126,7 @@ class mod_f extends module_template
 	
 	function del($data)
 	{
-		kdb_query('DELETE FROM `upload` WHERE `id`='.$data['id']);
+		ldb_query('DELETE FROM `upload` WHERE `id`='.$data['id']);
 		redirect_msg(URL.'/files/', lang('delete_ok'));
 		exit();
 	}

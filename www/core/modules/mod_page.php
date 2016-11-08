@@ -16,7 +16,7 @@ class mod_page extends module_template
 			return login_req();
 		
 
-		$data = kdb_select_one('page','*',input(1),'name');
+		$data = ldb_select_one('page','*',input(1),'name');
 		
 		if (!$data)
 			return core_error_404();

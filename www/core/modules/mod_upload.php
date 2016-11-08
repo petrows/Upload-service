@@ -38,13 +38,13 @@ class mod_upload extends module_template
 		if (input(1,'final')) return $this->get_final();
 		
 		# Form - reset status
-		if (kdb_select_one('upload', array('id'), $this->sid, 'code'))
+		if (ldb_select_one('upload', array('id'), $this->sid, 'code'))
 		{
 			return $this->new_sid();
 		}
 		
 		# Default - show form
-		$tpl = new tpl ('upload');
+		$tpl = new ltpl ('upload');
 		
 		# Get ext table
 		$ext_t = '';
@@ -141,9 +141,9 @@ class mod_upload extends module_template
 		$tms_del = time() + $ttl;
 		
 		# Create DB record
-		kdb_insert('upload', array('uid'=>user('id'),'code'=>$this->sid,'ph'=>$ph,'tms_upload'=>time(),'tms_last'=>time(),'tms_delete'=>$tms_del,'ttl'=>$ttl));
+		ldb_insert('upload', array('uid'=>user('id'),'code'=>$this->sid,'ph'=>$ph,'tms_upload'=>time(),'tms_last'=>time(),'tms_delete'=>$tms_del,'ttl'=>$ttl));
 		
-		$rec = kdb_select('upload', '*', '`uid`='.user('id').' AND `code`=\''.$this->sid.'\' LIMIT 1');
+		$rec = ldb_select('upload', '*', '`uid`='.user('id').' AND `code`=\''.$this->sid.'\' LIMIT 1');
 		$rec = @$rec[0];
 		if (!$rec)
 		{
@@ -182,14 +182,14 @@ class mod_upload extends module_template
 		$dh = substr(sha1(md5(microtime(true)).mt_rand().md5($fname.$fmime)),8,8);
 				
 		# Add to DB!		
-		$file_id = kdb_insert('file', array('uid'=>user('id'),'upid'=>$rec['id'],'upn'=>$id,'dh'=>$dh,'file_name'=>$fname,'file_ext'=>$ext,'file_size'=>$fsize,'tms_add'=>time(),'tms_last'=>time()));
+		$file_id = ldb_insert('file', array('uid'=>user('id'),'upid'=>$rec['id'],'upn'=>$id,'dh'=>$dh,'file_name'=>$fname,'file_ext'=>$ext,'file_size'=>$fsize,'tms_add'=>time(),'tms_last'=>time()));
 		if (!$file_id)
 		{
 			return exit(htmlspecialchars(json_encode(array('error'=>lang('fl_e_int').' (DB_E)')), ENT_NOQUOTES));
 		}
 		
-		kdb_query('UPDATE `upload` SET `file_count`=`file_count`+1, `file_size`=`file_size`+'.$fsize.' WHERE `id`='.$rec['id']);
-		# return exit(htmlspecialchars(json_encode(array('error'=>  kdb_log_html())), ENT_NOQUOTES));
+		ldb_query('UPDATE `upload` SET `file_count`=`file_count`+1, `file_size`=`file_size`+'.$fsize.' WHERE `id`='.$rec['id']);
+		# return exit(htmlspecialchars(json_encode(array('error'=>  ldb_log_html())), ENT_NOQUOTES));
 		
 		# Make info file
 		$inf = array ();
@@ -212,7 +212,7 @@ class mod_upload extends module_template
 		@unlink(ROOT_PATH.'/tmp/sid/'.md5($this->sid));
 		
 		# Check upload data
-		$u_data = kdb_select_one('upload', '*', $this->sid, 'code');
+		$u_data = ldb_select_one('upload', '*', $this->sid, 'code');
 		if (!$u_data || $u_data['uid'] != user('id'))
 			return core_error_404 ();
 		
@@ -225,8 +225,8 @@ class mod_upload extends module_template
 		$ttl_p = @$_POST['files_ttl_prol']?'Y':'N';
 		
 		# Update TTL
-		kdb_update_by_id('upload', $u_data['id'], array('tms_delete'=>$tms_del,'ttl'=>$ttl,'prolong'=>$ttl_p,'comment'=>@$_POST['files_descr']));
-		kdb_query('UPDATE `upload` SET `file_count`=(SELECT COUNT(*) FROM `file` WHERE `file`.`upid`=`upload`.`id`),`file_size`=(SELECT SUM(`file_size`) FROM `file` WHERE `file`.`upid`=`upload`.`id`) WHERE `id`='.$u_data['id']);
+		ldb_update_by_id('upload', $u_data['id'], array('tms_delete'=>$tms_del,'ttl'=>$ttl,'prolong'=>$ttl_p,'comment'=>@$_POST['files_descr']));
+		ldb_query('UPDATE `upload` SET `file_count`=(SELECT COUNT(*) FROM `file` WHERE `file`.`upid`=`upload`.`id`),`file_size`=(SELECT SUM(`file_size`) FROM `file` WHERE `file`.`upid`=`upload`.`id`) WHERE `id`='.$u_data['id']);
 		
 		# Redirect to the file control...
 		@header('Location: '.URL.'/f/'.$this->sid.'/');

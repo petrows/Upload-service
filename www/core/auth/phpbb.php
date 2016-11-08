@@ -230,10 +230,10 @@ function login_form ()
 {
 	if (user('logged'))
 	{
-		$tpl = new tpl('login_form_inline');
+		$tpl = new ltpl('login_form_inline');
 		return $tpl->get();		
 	} else {
-		$tpl = new tpl('login_form_inline');
+		$tpl = new ltpl('login_form_inline');
 		$tpl->v('current_url',  htmlspecialchars($_SERVER['REQUEST_URI']));
 		return $tpl->get();		
 	}

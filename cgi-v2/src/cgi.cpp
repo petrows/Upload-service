@@ -31,7 +31,7 @@ int CGI::run(int argc, char **argv) {
 	// Params
 	int c;
 
-	while ((c = getopt(argc, argv, "hd:")) != -1) {
+	while ((c = getopt(argc, argv, "hd:p:")) != -1) {
 		switch (c) {
 		case 'h':
 			// Print help
@@ -39,6 +39,9 @@ int CGI::run(int argc, char **argv) {
 			return 0;
 		case 'd':
 			cfgWorkDir = optarg;
+			break;
+		case 'p':
+			socketPath = optarg;
 			break;
 		default:
 			abort();
@@ -96,8 +99,9 @@ void CGI::sighandler(int signal) {
 
 void CGI::help() {
 	cout << "Usage: " << endl;
-	cout << "-h       : help" << endl;
-	cout << "-d <dir> : upload root directory" << endl;
+	cout << "-h        : help" << endl;
+	cout << "-d <dir>  : upload root directory" << endl;
+	cout << "-p <path> : socket path" << endl;
 }
 
 void CGI::threadFunc(int id) {

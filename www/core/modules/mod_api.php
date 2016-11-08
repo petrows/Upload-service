@@ -101,7 +101,7 @@ class mod_api extends module_template
 			$ver = intval($ver);
 			$os  = preg_replace('/[^a-z0-9]/','',strtolower($_COOKIE['os']));
 			# Check version
-			$lastv = kdb_select('client_version',array('ver','veri','tms_publish'),'`veri`>'.$ver.' AND `os_'.$os.'`=\'Y\' AND `published`=\'Y\' ORDER BY `veri` DESC LIMIT 1');
+			$lastv = ldb_select('client_version',array('ver','veri','tms_publish'),'`veri`>'.$ver.' AND `os_'.$os.'`=\'Y\' AND `published`=\'Y\' ORDER BY `veri` DESC LIMIT 1');
 			$lastv = @$lastv[0];
 			
 			if ($lastv)
@@ -119,13 +119,13 @@ class mod_api extends module_template
 		echo '</ttl>'."\n";
 		
 		# Get file list...
-		$u_list = kdb_select ('upload','*', '`uid`='.$uid.' ORDER BY `tms_upload` ASC');
+		$u_list = ldb_select ('upload','*', '`uid`='.$uid.' ORDER BY `tms_upload` ASC');
 		echo '<uploads>'."\n";
 		for ($x=0;$x<count($u_list);$x++)
 		{
 			echo '<upload id="'.$u_list[$x]['id'].'" code="'.$u_list[$x]['code'].'" ph="'.$u_list[$x]['ph'].'" comment="'.htmlspecialchars($u_list[$x]['comment']).'" tms_upload="'.$u_list[$x]['tms_upload'].'" tms_last="'.$u_list[$x]['tms_last'].'" ttl="'.$u_list[$x]['ttl'].'" tms_delete="'.$u_list[$x]['tms_delete'].'" prolong="'.($u_list[$x]['prolong']=='Y'?1:0).'">';
 			echo '<files>';
-			$f_list = kdb_select('file','*','`upid`='.$u_list[$x]['id'].' ORDER BY `tms_add` ASC');
+			$f_list = ldb_select('file','*','`upid`='.$u_list[$x]['id'].' ORDER BY `tms_add` ASC');
 			for ($f=0;$f<count($f_list);$f++)
 			{
 				echo '<file id="'.$f_list[$f]['id'].'" n="'.$f_list[$f]['upn'].'" dh="'.$f_list[$f]['dh'].'" name="'.htmlspecialchars($f_list[$f]['file_name']).'" size="'.$f_list[$f]['file_size'].'" tms_add="'.$f_list[$f]['tms_add'].'"/>';
@@ -194,7 +194,7 @@ class mod_api extends module_template
 		# print_r($in_flist);
 		
 		# Check version
-		$v_data = kdb_select('client_version','*','`veri`>'.$ver.' AND `os_'.$os.'`=\'Y\' AND `published`=\'Y\' ORDER BY `veri` DESC');
+		$v_data = ldb_select('client_version','*','`veri`>'.$ver.' AND `os_'.$os.'`=\'Y\' AND `published`=\'Y\' ORDER BY `veri` DESC');
 		$lastv = @$v_data[0];
 		
 		if (!$lastv)
@@ -289,9 +289,9 @@ class mod_api extends module_template
 		$tms_del = time() + $ttl;
 		
 		# Create DB record
-		kdb_insert('upload', array('uid'=>$this->uid,'code'=>$up_code,'ph'=>$ph,'tms_upload'=>time(),'tms_last'=>time(),'tms_delete'=>$tms_del,'ttl'=>$ttl));
+		ldb_insert('upload', array('uid'=>$this->uid,'code'=>$up_code,'ph'=>$ph,'tms_upload'=>time(),'tms_last'=>time(),'tms_delete'=>$tms_del,'ttl'=>$ttl));
 		
-		$rec = kdb_select('upload', '*', '`uid`='.$this->uid.' AND `code`=\''.$up_code.'\' LIMIT 1');
+		$rec = ldb_select('upload', '*', '`uid`='.$this->uid.' AND `code`=\''.$up_code.'\' LIMIT 1');
 		$rec = @$rec[0];
 		if (!$rec)
 		{
@@ -333,15 +333,15 @@ class mod_api extends module_template
 		$dh = substr(sha1(md5(microtime(true)).mt_rand().md5($fname.$fmime)),8,8);
 				
 		# Add to DB!		
-		$file_id = kdb_insert('file', array('uid'=>$this->uid,'upid'=>$rec['id'],'upn'=>$id,'dh'=>$dh,'file_name'=>$fname,'file_ext'=>$ext,'file_size'=>$fsize,'tms_add'=>time(),'tms_last'=>time()));
+		$file_id = ldb_insert('file', array('uid'=>$this->uid,'upid'=>$rec['id'],'upn'=>$id,'dh'=>$dh,'file_name'=>$fname,'file_ext'=>$ext,'file_size'=>$fsize,'tms_add'=>time(),'tms_last'=>time()));
 		if (!$file_id)
 		{
 			return $this->error('UPLOAD_INT_DB_E',lang('fl_e_int'));
 			return exit(htmlspecialchars(json_encode(array('error'=>lang('fl_e_int').' (DB_E)')), ENT_NOQUOTES));
 		}
 		
-		kdb_query('UPDATE `upload` SET `file_count`=`file_count`+1, `file_size`=`file_size`+'.$fsize.' WHERE `id`='.$rec['id']);
-		# return exit(htmlspecialchars(json_encode(array('error'=>  kdb_log_html())), ENT_NOQUOTES));
+		ldb_query('UPDATE `upload` SET `file_count`=`file_count`+1, `file_size`=`file_size`+'.$fsize.' WHERE `id`='.$rec['id']);
+		# return exit(htmlspecialchars(json_encode(array('error'=>  ldb_log_html())), ENT_NOQUOTES));
 		
 		# Make info file
 		$inf = array ();
@@ -362,7 +362,7 @@ class mod_api extends module_template
 	{
 		$id = intval($_GET['id']);
 		
-		$data = kdb_select_one('upload','*',$id);
+		$data = ldb_select_one('upload','*',$id);
 		if (!$data || @$data['uid'] != $this->uid)
 		{
 			return $this->error('UPLOAD_NF','Upload is not found...');
@@ -381,9 +381,9 @@ class mod_api extends module_template
 			$tms_del = $data['tms_upload'] + $ttl;
 		}
 		
-		kdb_query('UPDATE `upload` SET `comment`=\''.kdb_escape(@$_GET['comment']).'\',`prolong`=\''.($prol?'Y':'N').'\',`tms_delete`='.$tms_del.',`ttl`='.$ttl.' WHERE `id`='.$id);
+		ldb_query('UPDATE `upload` SET `comment`=\''.ldb_escape(@$_GET['comment']).'\',`prolong`=\''.($prol?'Y':'N').'\',`tms_delete`='.$tms_del.',`ttl`='.$ttl.' WHERE `id`='.$id);
 		
-		$data = kdb_select_one('upload','*',$id);
+		$data = ldb_select_one('upload','*',$id);
 		
 		echo '<update status="ok" tms_delete="'.$data['tms_delete'].'" ttl="'.$data['ttl'].'" prolong="'.$data['prolong'].'" tms_last="'.$data['tms_last'].'"/>'."\n";
 	}
@@ -392,13 +392,13 @@ class mod_api extends module_template
 	{
 		$id = intval($_GET['id']);
 		
-		$data = kdb_select_one('upload','*',$id);
+		$data = ldb_select_one('upload','*',$id);
 		if (!$data || @$data['uid'] != $this->uid)
 		{
 			return $this->error('UPLOAD_NF','Upload is not found...');
 		}
 		
-		kdb_query('DELETE FROM `upload` WHERE `id`='.$id);
+		ldb_query('DELETE FROM `upload` WHERE `id`='.$id);
 		
 		echo '<delete status="ok"/>'."\n";
 	}

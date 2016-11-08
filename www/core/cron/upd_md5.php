@@ -10,7 +10,7 @@ class st
 {
 	function run ()
 	{
-		$data = kdb_select('client_version','*','1');
+		$data = ldb_select('client_version','*','1');
 		foreach ($data as $d)
 			$this->process_dir(ROOT_PATH.'/client/v/'.$d['ver']);
 	}

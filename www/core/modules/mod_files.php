@@ -18,7 +18,7 @@ class mod_files extends module_template
 			return login_req();
 		}
 		
-		$data = kdb_select('upload','*','`uid`='.user('id').' ORDER BY `tms_upload` DESC');
+		$data = ldb_select('upload','*','`uid`='.user('id').' ORDER BY `tms_upload` DESC');
 
 		$u_list = '';
 		
@@ -30,7 +30,7 @@ class mod_files extends module_template
 				$f_title = htmlspecialchars ($data[$x]['comment']);
 			else {
 				# Get files
-				$f_list = kdb_select('file',array('file_name'),'`upid`='.$data[$x]['id'].' ORDER BY `id`');
+				$f_list = ldb_select('file',array('file_name'),'`upid`='.$data[$x]['id'].' ORDER BY `id`');
 				$f_list_len = 0;
 				$f_list_d = array ();
 				for ($a=0; $a<count($f_list); $a++)
@@ -56,7 +56,7 @@ class mod_files extends module_template
 			$u_list .= '</tr>';
 		}
 		
-		$tpl = new tpl('myfiles');
+		$tpl = new ltpl('myfiles');
 		$tpl->v('u_list',$u_list);		
 		return $tpl->get();
 	}

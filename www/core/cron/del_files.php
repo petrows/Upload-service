@@ -11,11 +11,11 @@ class del_files
 	function run ()
 	{
 		# 1. Update all files data
-		kdb_query('UPDATE `upload` SET `file_count`=(SELECT COUNT(*) FROM `file` WHERE `file`.`upid`=`upload`.`id`),`file_size`=(SELECT SUM(`file_size`) FROM `file` WHERE `file`.`upid`=`upload`.`id`)');
+		ldb_query('UPDATE `upload` SET `file_count`=(SELECT COUNT(*) FROM `file` WHERE `file`.`upid`=`upload`.`id`),`file_size`=(SELECT SUM(`file_size`) FROM `file` WHERE `file`.`upid`=`upload`.`id`)');
 		# 2. Remove upload-files by TTL-time
-		kdb_query('DELETE FROM `upload` WHERE `tms_delete`<'.time().' OR `file_count`=0');
+		ldb_query('DELETE FROM `upload` WHERE `tms_delete`<'.time().' OR `file_count`=0');
 		# 3. Remove files by no-parent
-		kdb_query('DELETE FROM `file` WHERE `file`.`upid` NOT IN (SELECT `id` FROM `upload`)');
+		ldb_query('DELETE FROM `file` WHERE `file`.`upid` NOT IN (SELECT `id` FROM `upload`)');
 		
 		# 4. Scan folders by no-parent uploads
 		$this->clean_d();
@@ -42,9 +42,9 @@ class del_files
 				
 				# Okay, we got key!
 				$code = $file1.$file2;
-				$res = kdb_select_one('upload', array('id'), $code, 'code');
+				$res = ldb_select_one('upload', array('id'), $code, 'code');
 				
-				if (!$res && !kdb_error())
+				if (!$res && !ldb_error())
 				{
 					# Delete this fuck'n file
 					echo 'Deleting: '.ROOT_PATH.'/d/'.$file1.'/'.$file2."\n";
