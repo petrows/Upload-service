@@ -52,6 +52,7 @@ public:
 signals:
 	void progress (qint64 done, qint64 total);
 	void status_changed ();
+	void state_changed (u_upload_file::FileState state);
 public slots:
 	void flist_progr_del();
 	void copy_file_link();
@@ -81,6 +82,7 @@ public:
 	bool remove_after_upload;
 
 	QString title;
+	QString last_error;
 
 	quint64 size_upoaded;
 	quint64 size_total;
@@ -139,6 +141,7 @@ signals:
 
 public slots:
 	void file_upload_progress (qint64 done, qint64 total);
+	void file_upload_status (u_upload_file::FileState state);
 	void status_recheck ();
 	void ulist_progr_del();
 	void copy_upload_link();

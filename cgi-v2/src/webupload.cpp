@@ -36,7 +36,9 @@ void WebUpload::handleRequest() {
 		printError(102, "Content-length header missing");
 		return;
 	}
-	if (!fileMax && fileSize > this->fileMax) {
+
+	if (fileMax && fileSize > fileMax) {
+		ERR << logHeader() << "File size " << fileSize << " too large for " << fileMax;
 		printError(103, "File is too large");
 		return;
 	}

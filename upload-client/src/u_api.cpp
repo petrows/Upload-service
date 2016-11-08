@@ -120,6 +120,8 @@ QString u_api::parse_error_code(QString code)
 		return tr("Login error. Check your Login/Password settings.");
 	if (code == "SID_ERROR")
 		return tr("Session error. Please, restart program.");
+	if (code == "103")
+		return tr("File is too large");
 
 	return tr("Unknown error: %1").arg(code);
 }

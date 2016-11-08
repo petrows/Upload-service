@@ -25,7 +25,7 @@
 
 #include "version.h"
 
-#define UPLOAD_DOMAIN "upload.petro.selan"
+#define UPLOAD_DOMAIN "u.petro.ws"
 
 class u_api;
 class u_core;
