@@ -1,5 +1,6 @@
 *.user
 build
 .idea
+www/core/config.php
 www/tmp
 www/d
