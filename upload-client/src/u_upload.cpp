@@ -462,7 +462,7 @@ void u_upload::file_upload_progress(qint64 /*done*/, qint64 /*total*/) {
 void u_upload::file_upload_status(u_upload_file::FileState state) {
 	u_upload_file *file = qobject_cast<u_upload_file *>(sender());
 	if (NULL != file) {
-		if (u_upload_file::FileState::Error == state) {
+		if (u_upload_file::Error == state) {
 			last_error = file->last_error;
 		}
 	}
