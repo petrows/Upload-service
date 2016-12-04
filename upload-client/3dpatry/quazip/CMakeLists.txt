@@ -1,6 +1,6 @@
 file(GLOB SRCS "*.c" "*.cpp")
 file(GLOB PUBLIC_HEADERS "*.h")
-qt4_wrap_cpp(MOC_SRCS ${PUBLIC_HEADERS})
+qt5_wrap_cpp(MOC_SRCS ${PUBLIC_HEADERS})
 set(SRCS ${SRCS} ${MOC_SRCS})
 
 add_library(quazip SHARED ${SRCS})

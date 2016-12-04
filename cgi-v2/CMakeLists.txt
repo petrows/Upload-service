@@ -3,6 +3,8 @@ set(PROJECT "upload-service")
 
 project(${PROJECT})
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 file(GLOB APP_H "src/*.h")
 file(GLOB APP_SRC "src/*.c*")
 

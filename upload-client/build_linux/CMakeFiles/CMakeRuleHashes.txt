@@ -1,0 +1,10 @@
+# Hashes of file build rules.
+4d7b110c1d53c09191e8faee7d5177be CMakeFiles/upload-client_automoc
+b113d0d24618e7be9e68218838eb7989 ui_ui_about.h
+122a671cb38edf9ddb56652c22c2dfb8 ui_ui_askwindow.h
+b18cb8e28dd28d660b67d2534b45d379 ui_ui_init.h
+c54670483ac731995218c73964e23da7 ui_ui_main.h
+f63feb80005d0b33bf2894479490a9e7 ui_ui_settings.h
+3f764df3bdc5529e6f0fba7017c1b955 ui_ui_update.h
+9bfcc0c59ce85b6a411bef6d728f4273 ui_ui_upload.h
+b73072601807b2ac3b4a0f04713b154e ui_ui_zip_files.h
