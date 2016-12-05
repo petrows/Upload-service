@@ -6,7 +6,7 @@
 u_api::u_api(QObject *parent) :
 	QObject(parent)
 {
-	this->req_url = QUrl("http://"UPLOAD_DOMAIN"/api/?");
+	this->req_url = QUrl("http://" UPLOAD_DOMAIN "/api/?");
 	this->login   = core->login;
 	this->passw   = core->passw;
 	this->sid     = core->sid;
@@ -28,7 +28,7 @@ u_api::u_api(QObject *parent) :
 
 QNetworkRequest u_api::std_request()
 {
-	this->req_url = QUrl("http://"UPLOAD_DOMAIN"/api/?");
+	this->req_url = QUrl("http://" UPLOAD_DOMAIN "/api/?");
 
 	this->req = QNetworkRequest();
 
