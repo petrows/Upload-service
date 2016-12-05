@@ -8,8 +8,8 @@ build_windows:
         - C:\cygwin64\bin\bash.exe build-windows.sh        
     artifacts:
         paths:
-        - /upload-client.zip
-        - /upload-client-setup.exe
+        - upload-client.zip
+        - upload-client-setup.exe
     
 build_linux:
     image: ubuntu:14.04
@@ -23,10 +23,10 @@ build_linux:
         - mkdir build_linux && cd build_linux
         - cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="./"
         - make all install
-        - cp -arv upload-client ../../
+        - cp -arv upload-client ../../upload-client-x64
     artifacts:
         paths:
-        - /upload-client
+        - upload-client-x64
 
 build_macos:
     stage: build
@@ -41,4 +41,4 @@ build_macos:
         - cp -av *.dmg ../../
     artifacts:
         paths:
-        - /*.dmg
+        - upload-client.dmg

@@ -27,7 +27,7 @@ cd bin
 "$MINGW_QT/windeployqt.exe" --release *.exe
 
 # Make portable installer
-/bin/zip -r -9 $ROOT_PATH/../upload-client.zip *
+/usr/bin/zip -r -9 $ROOT_PATH/../upload-client.zip *
 
 # Make exe installer 
 makensis.exe /NOCD $(/bin/cygpath -w $ROOT_PATH/installer.nsi)
