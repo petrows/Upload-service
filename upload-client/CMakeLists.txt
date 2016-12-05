@@ -59,6 +59,7 @@ if (OS_WIN)
 	link_directories(3dpatry/zlib-win32)
 	include_directories(3dpatry/zlib-win32/include)
 	set(LIBS ${LIBS} zlib1 ${CMAKE_CURRENT_SOURCE_DIR}/3dpatry/zlib-win32/zdll.lib)
+	install (FILES 3dpatry/zlib-win32/zlib1.dll DESTINATION bin)
 endif()
 
 # Source files
