@@ -1,0 +1,41 @@
+
+build_windows:
+    stage: build
+    tags:
+        - windows
+    script: 
+        - cd upload-client
+        - C:\cygwin64\bin\bash.exe build-windows.sh        
+    artifacts:
+        paths:
+        - build_win32/bin
+    
+build_linux:
+    image: ubuntu:14.04
+    stage: build
+    tags:
+        - linux
+    script: 
+        - apt-get update
+        - apt-get install -qy qt5-default qt5-qmake qtbase5-dev git cmake make build-essential
+        - cd upload-client
+        - mkdir build_linux && cd build_linux
+        - cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="./"
+        - make all install
+    artifacts:
+        paths:
+        - build_linux/bin
+
+build_macos:
+    stage: build
+    tags:
+        - macos
+    script: 
+        - cd upload-client
+        - mkdir build_macos && cd build_macos
+        - cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="./"
+        - make all install
+        - macdeployqt qt-test.app -always-overwrite -dmg
+    artifacts:
+        paths:
+        - build_macos/qt-test.dmg
