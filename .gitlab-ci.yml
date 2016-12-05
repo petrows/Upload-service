@@ -8,7 +8,7 @@ build_windows:
         - C:\cygwin64\bin\bash.exe build-windows.sh        
     artifacts:
         paths:
-        - build_win32/bin
+        - upload-client/build_win32/bin
     
 build_linux:
     image: ubuntu:14.04
@@ -24,7 +24,7 @@ build_linux:
         - make all install
     artifacts:
         paths:
-        - build_linux/bin
+        - upload-client/build_linux/bin
 
 build_macos:
     stage: build
@@ -38,4 +38,4 @@ build_macos:
         - macdeployqt upload-client.app -always-overwrite -dmg
     artifacts:
         paths:
-        - build_macos/*.dmg
+        - upload-client/build_macos/*.dmg
