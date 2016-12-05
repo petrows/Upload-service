@@ -38,7 +38,7 @@ build_macos:
         - cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="./"
         - make all install
         - macdeployqt upload-client.app -always-overwrite -dmg
-        - cp -arv *.dmg ../../
+        - cp -av *.dmg ../../
     artifacts:
         paths:
         - /*.dmg
