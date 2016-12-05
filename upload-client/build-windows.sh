@@ -19,7 +19,7 @@ export QTDIR="$QT_BIN"
 cd build_win32
 /bin/mkdir bin
 cmake.exe -G "Visual Studio 14" -DCMAKE_INSTALL_PREFIX="./" -DCMAKE_BUILD_TYPE=Release ..
-MSBuild.exe upload-client.sln
+MSBuild.exe /p:Configuration=Release upload-client.sln
 
 cd bin
 "$QT_BIN/windeployqt.exe" --release *.exe
