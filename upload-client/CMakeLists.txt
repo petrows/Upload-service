@@ -58,7 +58,7 @@ file(GLOB_RECURSE ZIP_SRCS "3dpatry/quazip/*.c*" "3dpatry/quazip/*.h")
 if (OS_WIN)
 	link_directories(3dpatry/zlib-win32)
 	include_directories(3dpatry/zlib-win32/include)
-	set(LIBS ${LIBS} zlib1 zdll.lib)
+	set(LIBS ${LIBS} zlib1 ${CMAKE_CURRENT_SOURCE_DIR}/3dpatry/zlib-win32/zdll.lib)
 endif()
 
 # Source files
