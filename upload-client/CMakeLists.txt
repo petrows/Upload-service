@@ -53,7 +53,7 @@ include_directories(3dpatry/qtsingleapplication/src)
 
 # ZIP
 include_directories(3dpatry/quazip)
-file(GLOB_RECURSE ZIP_SRCS "3dpatry/quazip/*.cpp" "3dpatry/quazip/*.h")
+file(GLOB_RECURSE ZIP_SRCS "3dpatry/quazip/*.c*" "3dpatry/quazip/*.h")
 if (OS_WIN)
 	link_directories(3dpatry/zlib-win32)
 	include_directories(3dpatry/zlib-win32/include)
@@ -63,12 +63,16 @@ endif()
 # Source files
 file(GLOB_RECURSE SRCS "src/*.cpp" "src/*.h")
 
+# Res files
+FILE (GLOB_RECURSE RESOURCES "res/*.qrc")
+qt5_add_resources(RESOURCES_RCC ${RESOURCES})
+
 # UI files
 file(GLOB_RECURSE SRCS_UI "src/*.ui")
 qt5_wrap_ui(SRCS_UI_MOC ${SRCS_UI})
 
 # Tell CMake to create the helloworld executable
-add_executable(${PROJECT} WIN32 ${SRCS} ${SRCS_UI_MOC} ${SE_SRC} ${ZIP_SRCS})
+add_executable(${PROJECT} WIN32 ${SRCS} ${SRCS_UI_MOC} ${SE_SRC} ${ZIP_SRCS} ${RESOURCES_RCC})
 
 # Install targets for different platforms
 if (OS_WIN OR OS_LINUX)
