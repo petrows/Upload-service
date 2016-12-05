@@ -35,7 +35,7 @@ build_macos:
         - mkdir build_macos && cd build_macos
         - cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="./"
         - make all install
-        - macdeployqt qt-test.app -always-overwrite -dmg
+        - macdeployqt upload-client.app -always-overwrite -dmg
     artifacts:
         paths:
-        - build_macos/qt-test.dmg
+        - build_macos/*.dmg
