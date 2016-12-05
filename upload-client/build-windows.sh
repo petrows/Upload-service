@@ -27,4 +27,4 @@ cd bin
 "$MINGW_QT/windeployqt.exe" --release *.exe
 
 # Make installer 
-makensis.exe  /NOCD $ROOT_PATH/installer.nsi
+makensis.exe /NOCD $(/bin/cygpath -w $ROOT_PATH/installer.nsi)
