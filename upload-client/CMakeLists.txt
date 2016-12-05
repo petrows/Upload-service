@@ -52,12 +52,13 @@ SET(SE_H 3dpatry/qtsingleapplication/src/qtsingleapplication.h 3dpatry/qtsinglea
 include_directories(3dpatry/qtsingleapplication/src)
 
 # ZIP
+add_definitions(-DQUAZIP_STATIC)
 include_directories(3dpatry/quazip)
 file(GLOB_RECURSE ZIP_SRCS "3dpatry/quazip/*.c*" "3dpatry/quazip/*.h")
 if (OS_WIN)
 	link_directories(3dpatry/zlib-win32)
 	include_directories(3dpatry/zlib-win32/include)
-	set(LIBS ${LIBS} zlib1 3dpatry/zlib-win32/zdll.lib)
+	set(LIBS ${LIBS} zlib1 zdll.lib)
 endif()
 
 # Source files

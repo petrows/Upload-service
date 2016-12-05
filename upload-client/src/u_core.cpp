@@ -49,7 +49,7 @@ u_core::u_core(QObject *parent) :
 	this->version_i[1] = int_v[1];
 	this->version_i[2] = int_v[2];
 
-	this->build_tms = QString(__DATE__" "__TIME__);
+	this->build_tms = QString("None");
 }
 
 u_core::~u_core()
