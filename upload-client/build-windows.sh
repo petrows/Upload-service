@@ -6,6 +6,8 @@ set -e
 QT_DIR="C:\\Qt\\5.7\\mingw53_32"
 MINGW_DIR="c:\\Qt\\Tools\\mingw530_32"
 
+ROOT_PATH=$(pwd)
+
 export CMAKE_PREFIX_PATH="$QT_DIR"
 
 MINGW_QT=$(/bin/cygpath -u "$QT_DIR")"/bin"
@@ -24,3 +26,5 @@ cmake.exe -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX="./" -DCMAKE_BUILD_TYPE=Re
 cd bin
 "$MINGW_QT/windeployqt.exe" --release *.exe
 
+# Make installer 
+makensis.exe  /NOCD $ROOT_PATH/installer.nsi
