@@ -8,8 +8,8 @@ build_windows:
         - C:\cygwin64\bin\bash.exe build-windows.sh        
     artifacts:
         paths:
-        - upload-client.zip
-        - upload-client-setup.exe
+        - /upload-client.zip
+        - /upload-client-setup.exe
     
 build_linux:
     image: ubuntu:14.04
@@ -26,7 +26,7 @@ build_linux:
         - cp -arv upload-client ../../
     artifacts:
         paths:
-        - upload-client
+        - /upload-client
 
 build_macos:
     stage: build
@@ -41,4 +41,4 @@ build_macos:
         - cp -arv *.dmg ../../
     artifacts:
         paths:
-        - *.dmg
+        - /*.dmg
