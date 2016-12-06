@@ -1,27 +1,27 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include <QObject>
-#include <QtWidgets/QApplication>
-#include <QSettings>
+#include <QDebug>
 #include <QDir>
-#include <QUrl>
-#include <QMutex>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QTime>
-#include <QtWidgets/QFileDialog>
-#include <QThread>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QProgressBar>
 #include <QDomDocument>
 #include <QIcon>
-#include <QDebug>
+#include <QMutex>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QObject>
+#include <QSettings>
+#include <QThread>
+#include <QTime>
+#include <QUrl>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressBar>
 
-#include <time.h>
 #include <math.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "version.h"
 
@@ -42,9 +42,9 @@ class ui_wdg_flist;
 class ui_wdg_btnlabel;
 
 #ifndef IN_MAIN
-extern u_core * core;
+extern u_core *core;
 #else
-u_core * core;
+u_core *core;
 #endif
 
 #endif // GLOBAL_H
